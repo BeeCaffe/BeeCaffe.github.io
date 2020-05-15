@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2020/05/15/Find-Max-SubArray/</loc>
+    
+    <lastmod>2020-05-15T03:57:58.266Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2020/05/15/strassen/</loc>
     
     <lastmod>2020-05-15T03:46:34.047Z</lastmod>
