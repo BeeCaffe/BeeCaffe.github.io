@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Throw Exception In Constructor And Destructor | BeeCaffe&#39;s Personal Blogs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="What will happen if throw a exception in constructor? Conculsion: Throwing an exception in constructor may case two problem:(1) The destructor of this Class can not be called;(2) Memory leaky; Explain">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Throw Exception In Constructor And Destructor">
+<meta property="og:url" content="http://yoursite.com/2020/05/15/Throw-Exception-In-Constructor-And-Destructor/index.html">
+<meta property="og:site_name" content="BeeCaffe&#39;s Personal Blogs">
+<meta property="og:description" content="What will happen if throw a exception in constructor? Conculsion: Throwing an exception in constructor may case two problem:(1) The destructor of this Class can not be called;(2) Memory leaky; Explain">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-05-15T14:35:57.000Z">
+<meta property="article:modified_time" content="2020-05-15T14:36:23.604Z">
+<meta property="article:author" content="BeeCaffe">
+<meta property="article:tag" content="C++">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="BeeCaffe&#39;s Personal Blogs" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">BeeCaffe&#39;s Personal Blogs</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Throw-Exception-In-Constructor-And-Destructor" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/15/Throw-Exception-In-Constructor-And-Destructor/" class="article-date">
+  <time datetime="2020-05-15T14:35:57.000Z" itemprop="datePublished">2020-05-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Throw Exception In Constructor And Destructor
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="What-will-happen-if-throw-a-exception-in-constructor"><a href="#What-will-happen-if-throw-a-exception-in-constructor" class="headerlink" title="What will happen if throw a exception in constructor?"></a>What will happen if throw a exception in constructor?</h2><ul>
+<li><strong>Conculsion</strong>: Throwing an exception in constructor may case two problem:<br>(1) The destructor of this Class can not be called;<br>(2) Memory leaky;</li>
+<li><strong>Explain</strong>:<br>As the following code, class ObjectA is a base class which is inherient by class Normal.Meanwhile, there is also another class, class Evil, which has throwed an exception in constructor. Class Normal has a member variable of Class Evil. In the constructor of Class Normal, when the constructor is called, there are four member should be constrcut, their are  m_a,m_evil,m_resource and m_value in Class ObjectA. In Class Normal, m_a,m_resource and m_value have been constructed correctly, however when compile attempts to construct m_evil, there has throwed and exception.It cause the construction of Class Normal has been stopped, thus, Class Normal’s destructor can not be called correctly and m_resource can not be delete. So, there is a memory leaky in this code.</li>
+<li><strong>Code</strong>:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">using namespace std;</span><br><span class="line">class ObjectA&#123;</span><br><span class="line">    public:</span><br><span class="line">        explicit ObjectA(int a):m_value(new int(a))&#123;&#125;</span><br><span class="line">    private:</span><br><span class="line">        int *m_value;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;Throw a exception in Class Evil</span><br><span class="line">class Evil&#123;</span><br><span class="line">    public:</span><br><span class="line">        Evil()&#123;throw 10;&#125;;</span><br><span class="line">        ~Evil()&#123;&#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;destructor can not be called, and m_resource can not be delete, which causes memory leaky.</span><br><span class="line">class Normal:public ObjectA&#123;</span><br><span class="line">    public:</span><br><span class="line">        explicit Normal(int a):ObjectA(a), m_a(a+1),m_resource(new int(a+2))&#123;&#125;</span><br><span class="line">        ~Normal()&#123;delete m_resource;&#125;</span><br><span class="line">    private:</span><br><span class="line">        ObjectA m_a;</span><br><span class="line">        Evil m_evil;</span><br><span class="line">        int *m_resource;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">static void hasMemoryLeak()&#123;</span><br><span class="line">    try&#123;</span><br><span class="line">        Normal n(1);</span><br><span class="line">    &#125;catch(...)&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main()&#123;</span><br><span class="line">    hasMemoryLeak();</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/05/15/Throw-Exception-In-Constructor-And-Destructor/" data-id="cka8b3ciz000nokv6e6yc7lji" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/" rel="tag">C++</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/05/15/What-Compile-Do-When-An-Empty-Class-Is-Declared/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          What Compile Do When An Empty Class Is Declared
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/05/15/bind-And-function-In-C/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">bind And function In C++</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Data-Structure/" rel="tag">Data Structure</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Introduce-To-Algorithm/" rel="tag">Introduce To Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/network/" rel="tag">network</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C/" style="font-size: 13.33px;">C++</a> <a href="/tags/Data-Structure/" style="font-size: 13.33px;">Data Structure</a> <a href="/tags/Introduce-To-Algorithm/" style="font-size: 16.67px;">Introduce To Algorithm</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/network/" style="font-size: 10px;">network</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/05/15/What-Compile-Do-When-An-Empty-Class-Is-Declared/">What Compile Do When An Empty Class Is Declared</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/15/Throw-Exception-In-Constructor-And-Destructor/">Throw Exception In Constructor And Destructor</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/15/bind-And-function-In-C/">bind And function In C++</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/15/Variable-Arguments-In-C/">Variable Arguments In C++</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/15/Install-Boost-In-Linux/">Install Boost In Linux</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 BeeCaffe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

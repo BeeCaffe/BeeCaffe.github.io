@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>TCP Three Way Handshake | BeeCaffe&#39;s Personal Blogs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1. TCP Header FormatAs is shown in the following picture, the TCP header has 20 Bytes in total.   Port Number: Each TCP segment includes source port number and destination port number, which respectiv">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TCP Three Way Handshake">
+<meta property="og:url" content="http://yoursite.com/2020/05/15/TCP-Three-Way-Handshake/index.html">
+<meta property="og:site_name" content="BeeCaffe&#39;s Personal Blogs">
+<meta property="og:description" content="1. TCP Header FormatAs is shown in the following picture, the TCP header has 20 Bytes in total.   Port Number: Each TCP segment includes source port number and destination port number, which respectiv">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/13348038-e096bec9fa7edcef.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/13348038-fe57d097a914e27c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/13348038-20a6e02b754a085e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/13348038-ad7f7218e572285e.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="article:published_time" content="2020-05-15T14:31:35.000Z">
+<meta property="article:modified_time" content="2020-05-15T14:32:04.416Z">
+<meta property="article:author" content="BeeCaffe">
+<meta property="article:tag" content="network">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/13348038-e096bec9fa7edcef.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+  
+    <link rel="alternate" href="/atom.xml" title="BeeCaffe&#39;s Personal Blogs" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">BeeCaffe&#39;s Personal Blogs</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-TCP-Three-Way-Handshake" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/15/TCP-Three-Way-Handshake/" class="article-date">
+  <time datetime="2020-05-15T14:31:35.000Z" itemprop="datePublished">2020-05-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      TCP Three Way Handshake
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-TCP-Header-Format"><a href="#1-TCP-Header-Format" class="headerlink" title="1. TCP Header Format"></a>1. TCP Header Format</h2><p>As is shown in the following picture, the TCP header has 20 Bytes in total.</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/13348038-e096bec9fa7edcef.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<ul>
+<li><p><strong>Port Number</strong>: Each TCP segment includes source port number and destination port number, which respectively refers to the TCP segment sender’s and receiver’s address. Notes to mention that, here we utilizes “port” rather than “address”, that is said TCP answer for application layer and itself belong to tranport layer. Meanwhile, the combination of “port” and “IP address” is called socket, which is able to ensure a specific program in a computer. </p>
+</li>
+<li><p><strong>Sequence Number</strong>: Behind source and destination port, 32 bits have been utilized to reserver sequence number, which is randomlly produced during Three-Way Handshake process and used to ensure the correction of the TCP segment order. TCP is an order protocal, and the sequence number is used to make sure TCP message can be sequential sent to another computer’s application layer.</p>
+</li>
+<li><strong>Acknowledgement Number</strong>: Then, there is 32 bits Ackknowledgement Number in TCP Header. We call it as ack-number for simplify. Ack-numebr is mainly used to response last received TCP message that your message I have received.</li>
+<li>*<em>Header Length</em>: The length of TCP header, usually is 20 Bytes.</li>
+<li><strong>Flag Bits</strong>:<ul>
+<li><strong>URG=1</strong>: enable Uregent Pointer</li>
+<li><strong>ACK=1</strong>: enable Acknowledgement Number </li>
+<li><strong>PSH=1</strong>: This message should be submitted to application layer as soon as possible.</li>
+<li><strong>RST=1</strong>: reset connection</li>
+<li><strong>SYN=1</strong>: open a new connection</li>
+<li><strong>FIN=1</strong>: finish a connection</li>
+</ul>
+</li>
+<li><p><strong>CheckSum and Urgent Pinter</strong>:<br><strong>CheckSum</strong> is utilized to check correctness of TCP message to avoid the loss of data in transmission process. In TCP protocol, if transport find that the TCP package in error, it will request the Client/Server resend this package. Urgent pointer, I do not know the usage of this segment.</p>
+</li>
+<li><p><strong>Notes</strong>:</p>
+<ul>
+<li>Acknowledge Number(ack) and ACK flag are different things in TCP header.</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-Three-Way-Handshake"><a href="#2-Three-Way-Handshake" class="headerlink" title="2. Three-Way Handshake"></a>2. Three-Way Handshake</h2><p>Three-Way Handshake refers to that the client and server link establish process requires three data package in total.This process is generally raised by client function <strong>connect()</strong>, and the mainly process of three way handshake is shown in the following picture.</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/13348038-fe57d097a914e27c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<ul>
+<li><strong>First-Way Handshake</strong>:<br>Client sets SYN bits as 1, that is SYN=1, and randomly generates a sequence value i, that is seq=i, and sends data package to server. After that client changes state to SYN-SENT and waits for the ackknowledgement of server. Meanwhile, server keeps LISTEN state until the data package come in.</li>
+<li><strong>Second-Way Handshake</strong>:<br>Server receive the first package and check the SYN bit. When SYN=1, server knows that client suppose to establish connection with himself. Then the server responds an data package and sets ACK and SYN bit as 1. acknowledgement sequence assigns to i+1, that is ack=i+1, as a respose for first data package. Meanwhile, server also randomly produces a sequence j, that is seq=j, then this package would be send back. After that sever status is setted to SYN-RECV status.</li>
+<li><strong>Three-Way Handshake</strong>:<br>When Client receives the package, it will check the acknowledgement sequence’s value and the ACK bit. If ACK=1 and seq=i+1, it will send the last package of the Three-Way Handshake. The ACK bit also is setted as 1 and the seq=j+1, then this package is sent to server by client. Once this package leaves away client, it state is setted as ESTAB-LISHED which represents that the TCP connection has been established successfully. Then, the client and server can tranfer datas each other.<h2 id="3-Four-Way-Wavehand"><a href="#3-Four-Way-Wavehand" class="headerlink" title="3. Four-Way Wavehand"></a>3. Four-Way Wavehand</h2>Four-Way Wavehand refers to that close a TCP connection require four package between client and server in total. The reson why close a TCP connection needs four package is that TCP connection is a Full Duplex data transfers channel. Thus, client and server must close respectively, called half-close, to avoid loss of data.</li>
+</ul>
+<p><img src="https://upload-images.jianshu.io/upload_images/13348038-20a6e02b754a085e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<p>Duing to TCP connection is full duplex data transfers channel, each channel must be closed one by one to avoid loss of data. For example, when Client hasn’t data to transfrom, the client will send a package with FIN=1 to tell Server that I do not send any package, but I can receive package. After the server receives this package, it will response a package to tell client that I know you will not send package anymore, and keep sending package to client util data finish.</p>
+<ul>
+<li><strong>One-Way Wavehand</strong>:<br>Client sends a package with FIN=1, seq=i to colse the data send channel, and then Clinet change to FIN-WAIT1 state.</li>
+<li><strong>One-Way Wavehand</strong>:<br>After Servre receives the package with FIN=1, it sends a package with ACK=1,seq=i+1 to acknowledge received package, then changes to CLOSE-WAIT state.</li>
+<li><p><strong>One-Way Wavehand</strong>:<br>After Servre sends over it’s data, it will send a package with FIN=1, seq=j and changes it state to LAST-ACK.</p>
+</li>
+<li><p><strong>One-Way Wavehand</strong>:<br>The Client sends the last ACK package to Server, and changes t o TIME-WAIT state, which waits to 2MSL to avoid loss of package. Then Client is closed, and when the servre receive the last ACK package, it will be colsed to.</p>
+</li>
+<li><p><strong>Notes</strong>:</p>
+<ul>
+<li><strong>TIME-WAIT</strong>: MSL is the longest time of IP package exists in the internet. As result of routing abnormal, many packages always get loss in internet. And routing abnormal always requires several minute to fix it. During routing abnormal , package may get loss and loop in routes, meanwhile, transmitting end may resend this package, and the lossed package is called lost duplicate or wandering duplicate. TCP protocol must be able to deal wandering duplicate correctly. Therefore, TIME-WAIT state exist in TCP protocol is resonable. Firstly, Reliable implement of TCP full duplex protocol termination. Secondly, Allows duplicate segments to disappear in the network.<h2 id="4-Code-For-Linux"><a href="#4-Code-For-Linux" class="headerlink" title="4. Code For Linux"></a>4. Code For Linux</h2>There is the flow chart of TCP connection and linux code.</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://upload-images.jianshu.io/upload_images/13348038-ad7f7218e572285e.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="cs.jpg"></p>
+<pre><code>//Client 
+#include&lt;sys/socket.h&gt;
+#include&lt;time.h&gt;
+#define MAXLEN 1024
+int main(int argc,char** argv){
+    int sockfd;
+    struct sockaddr_in servaddr;
+    if(argc!=2)
+        err_quit(&quot;usage: tcpli &lt;IP address&gt;&quot;);
+    sockfd=socket(AF_INET,SOCK_STREAM,0);
+    bzero(&amp;servaddr,sizeof(servaddr));
+    servaddr.sin_family = AF_INET;
+    servaddr.sin_port=htons(13);
+    inet_port(AF_INET,argv[1],&amp;Servaddr.sin_addr);
+    connect(sockfd,(SA*)&amp;Servaddr,sizeof(servaddr));
+    str_cli(stdin,sockfd);
+    return 0;
+}
+
+void str_cli(FILE *fp,int sockfd){
+    char sendline[MAXLEN],recvline[MAXLEN];
+    while(fgets(sendline,MAXLEN,fp)!=NULL){
+        write(sockfd,sendline,strlen(sendline));
+        if(readline(sockfd,recvline,MAXLEN)==0)
+            err_quit(&quot;str_cli:server terminated prematruely&quot;);
+        fputs(recvline,stdout);
+    }
+}
+
+//Server
+#include&lt;sys/socket.h&gt;
+int main(){
+    int listenfd,connfd;
+    pid_t child_pid;
+    socklen_t clilen;
+    struct sockaddr_in cliaddr,servaddr;
+    listenfd=socket(AF_INET,SOCK_STREAM,0);
+    bzero(&amp;servaddr,sizeof(servaddr));
+    servaddr.sin_family = AF_INET;
+    servaddr.sin_addr.s_addr=htonl(INADDR_ANY);
+    servaddr.sin_port=htons(13);
+    bind(listenfd,(SA*)&amp;servaddr,sizeof(servaddr));
+    listen(listenfd,LISTENQ);
+    for(;;){
+        clilen=sizeof(cliaddr);
+        connfd=accept(listenfd,(SA*)&amp;cliaddr,&amp;clilen);
+        if((chilpid=fork()==0)){
+            close(listenfd);
+            str_echo(connfd);
+            exit(0);
+        }
+        close(connfd);
+    }
+    return 0;
+}
+
+void str_echo(int sockfd){
+    ssize_t n;
+    char buf[MAXLEN];
+    again:
+        while((n=read(sockfd,buf,MAXLEN))&gt;0)
+            write(sockfd,buf,n);
+        if(n&lt;0&amp;&amp;errno=EINTR)
+            goto again;
+        else if(n&lt;0)
+            err_sys(&quot;str_echo: read error&quot;);
+}
+</code></pre><h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] <a href="https://www.cnblogs.com/Qing-840/p/9283367.html" target="_blank" rel="noopener">https://www.cnblogs.com/Qing-840/p/9283367.html</a></p>
+<p>[2] &lt;&lt;TCP/IP Illustrated, Volume 1: The Protocols&gt;&gt;</p>
+<p>[3] &lt;<UNIX network programming>&gt;</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/05/15/TCP-Three-Way-Handshake/" data-id="cka8b3ciz000lokv64yq83s80" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/network/" rel="tag">network</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/05/15/Install-Boost-In-Linux/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Install Boost In Linux
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/05/15/SpinLock-In-Linux/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">SpinLock In Linux</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Data-Structure/" rel="tag">Data Structure</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Introduce-To-Algorithm/" rel="tag">Introduce To Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/network/" rel="tag">network</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C/" style="font-size: 13.33px;">C++</a> <a href="/tags/Data-Structure/" style="font-size: 13.33px;">Data Structure</a> <a href="/tags/Introduce-To-Algorithm/" style="font-size: 16.67px;">Introduce To Algorithm</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/network/" style="font-size: 10px;">network</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/05/15/What-Compile-Do-When-An-Empty-Class-Is-Declared/">What Compile Do When An Empty Class Is Declared</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/15/Throw-Exception-In-Constructor-And-Destructor/">Throw Exception In Constructor And Destructor</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/15/bind-And-function-In-C/">bind And function In C++</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/15/Variable-Arguments-In-C/">Variable Arguments In C++</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/15/Install-Boost-In-Linux/">Install Boost In Linux</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 BeeCaffe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

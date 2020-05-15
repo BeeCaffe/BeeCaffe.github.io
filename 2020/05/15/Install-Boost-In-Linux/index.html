@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Install Boost In Linux | BeeCaffe&#39;s Personal Blogs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1. Fast installTyping the following command in linux console to install boost dirtectly. Notes: you’d best add sudo before you command to aviod premission deny especially in system level path. wget ht">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Install Boost In Linux">
+<meta property="og:url" content="http://yoursite.com/2020/05/15/Install-Boost-In-Linux/index.html">
+<meta property="og:site_name" content="BeeCaffe&#39;s Personal Blogs">
+<meta property="og:description" content="1. Fast installTyping the following command in linux console to install boost dirtectly. Notes: you’d best add sudo before you command to aviod premission deny especially in system level path. wget ht">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-05-15T14:32:34.000Z">
+<meta property="article:modified_time" content="2020-05-15T14:32:57.744Z">
+<meta property="article:author" content="BeeCaffe">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="BeeCaffe&#39;s Personal Blogs" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">BeeCaffe&#39;s Personal Blogs</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Install-Boost-In-Linux" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/15/Install-Boost-In-Linux/" class="article-date">
+  <time datetime="2020-05-15T14:32:34.000Z" itemprop="datePublished">2020-05-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Install Boost In Linux
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-Fast-install"><a href="#1-Fast-install" class="headerlink" title="1. Fast install"></a>1. Fast install</h2><p>Typing the following command in linux console to install boost dirtectly.</p>
+<p><strong>Notes</strong>: you’d best add <strong>sudo</strong> before you command to aviod premission deny especially in system level path.</p>
+<pre><code>wget https://dl.bintray.com/boostorg/release/1.72.0/source/boost_1_72_0.tar.gz
+
+tar -xzvf boost_1_54_0.tar.gz
+
+cd boost_1_54_0
+
+./bootstrap.sh --prefix=/usr/local
+
+./b2 install --with=all
+
+## you can find boost library in /usr/local/lib.
+</code></pre><h2 id="2-Test-example"><a href="#2-Test-example" class="headerlink" title="2. Test example"></a>2. Test example</h2><p>There is an test example of boost libray, you just need to copy the soucure code of the following program and compile this source code:</p>
+<ul>
+<li><p><strong>command</strong></p>
+<pre><code>vim boost_test.cc
+
+g++ boost_test.cc -L/usr/local/lib -lboost_system
+
+./a.out
+</code></pre></li>
+<li><p><strong>source code</strong></p>
+<pre><code>#include &lt;boost/lexical_cast.hpp&gt;
+#include &lt;iostream&gt;
+int main()
+{
+        using boost::lexical_cast;
+        int a = lexical_cast&lt;int&gt;(&quot;123&quot;);
+        double b = lexical_cast&lt;double&gt;(&quot;123.12&quot;);
+        std::cout&lt;&lt;a&lt;&lt;std::endl;
+        std::cout&lt;&lt;b&lt;&lt;std::endl;
+        return 0;
+}
+</code></pre></li>
+<li><p><strong>output</strong></p>
+<pre><code>123
+123.12
+</code></pre></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/05/15/Install-Boost-In-Linux/" data-id="cka8b3cis0005okv62n2c9b82" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/05/15/Variable-Arguments-In-C/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Variable Arguments In C++
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/05/15/TCP-Three-Way-Handshake/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">TCP Three Way Handshake</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Data-Structure/" rel="tag">Data Structure</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Introduce-To-Algorithm/" rel="tag">Introduce To Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/network/" rel="tag">network</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C/" style="font-size: 13.33px;">C++</a> <a href="/tags/Data-Structure/" style="font-size: 13.33px;">Data Structure</a> <a href="/tags/Introduce-To-Algorithm/" style="font-size: 16.67px;">Introduce To Algorithm</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/network/" style="font-size: 10px;">network</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/05/15/What-Compile-Do-When-An-Empty-Class-Is-Declared/">What Compile Do When An Empty Class Is Declared</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/15/Throw-Exception-In-Constructor-And-Destructor/">Throw Exception In Constructor And Destructor</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/15/bind-And-function-In-C/">bind And function In C++</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/15/Variable-Arguments-In-C/">Variable Arguments In C++</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/15/Install-Boost-In-Linux/">Install Boost In Linux</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 BeeCaffe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

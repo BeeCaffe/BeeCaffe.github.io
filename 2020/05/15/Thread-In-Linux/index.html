@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Thread In Linux | BeeCaffe&#39;s Personal Blogs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Header 1#include&lt;pthread.h&gt; List  pthread_create() pthread_join() pthread_detach() pthread_slef() pthread_exit()  pthread_create 1int pthread_create(pthread_t *thread,const pthread_attr_t *attr,">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Thread In Linux">
+<meta property="og:url" content="http://yoursite.com/2020/05/15/Thread-In-Linux/index.html">
+<meta property="og:site_name" content="BeeCaffe&#39;s Personal Blogs">
+<meta property="og:description" content="Header 1#include&lt;pthread.h&gt; List  pthread_create() pthread_join() pthread_detach() pthread_slef() pthread_exit()  pthread_create 1int pthread_create(pthread_t *thread,const pthread_attr_t *attr,">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/13348038-c5c6cfe7efe3895a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/13348038-4fd12eaa3611cca6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/13348038-92c4f0747486ddab.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="article:published_time" content="2020-05-15T14:27:20.000Z">
+<meta property="article:modified_time" content="2020-05-15T14:27:44.099Z">
+<meta property="article:author" content="BeeCaffe">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/13348038-c5c6cfe7efe3895a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+  
+    <link rel="alternate" href="/atom.xml" title="BeeCaffe&#39;s Personal Blogs" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">BeeCaffe&#39;s Personal Blogs</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Thread-In-Linux" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/15/Thread-In-Linux/" class="article-date">
+  <time datetime="2020-05-15T14:27:20.000Z" itemprop="datePublished">2020-05-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Thread In Linux
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Header"><a href="#Header" class="headerlink" title="Header"></a>Header</h2><hr>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;pthread.h&gt;</span></span></span><br></pre></td></tr></table></figure>
+<h2 id="List"><a href="#List" class="headerlink" title="List"></a>List</h2><hr>
+<ul>
+<li><a href="#pthread_create">pthread_create</a>()</li>
+<li><a href="#pthread_join">pthread_join</a>()</li>
+<li><a href="#pthread_detach">pthread_detach</a>()</li>
+<li><a href="#pthread_self">pthread_slef</a>()</li>
+<li><a href="#pthread_exit">pthread_exit</a>()</li>
+</ul>
+<h2 id="pthread-create"><a href="#pthread-create" class="headerlink" title="pthread_create"></a>pthread_create</h2><hr>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int pthread_create(pthread_t *thread,const pthread_attr_t *attr,void* (*start_routine)(void*), void *arg);</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>brief:</strong> The pthread_create() function starts a new thread in the calling process, the new thread starts execution by invoking start_routine();</li>
+<li><p><strong>arguments:</strong></p>
+<ul>
+<li><strong>-thread:</strong> The pointer points to thread identifier.</li>
+<li><strong>-attr:</strong> The  attr argument points to a pthread_attr_t structure whose contents are used at thread creation time to determine attributes for the new thread;this structure is initialized using pthread_attr_init(3) and related functions.  If  attr  is  NULL,  then  the  thread  is  created  with  default attributes.</li>
+<li><strong>-start_routine:</strong> The function address of thread run.</li>
+<li><strong>-arg</strong> The arguments of start_toutine.</li>
+</ul>
+</li>
+<li><p><strong>return value:</strong><br>On success, pthread_create() returns 0; on error, it returns an error number, and the contents of *thread are undefined.</p>
+</li>
+<li><strong>Code:</strong>  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;pthread&gt;</span></span></span><br><span class="line"><span class="comment">//this is a sample example of pthread_create.</span></span><br><span class="line"><span class="comment">//start routine 1</span></span><br><span class="line"><span class="function"><span class="keyword">void</span>* <span class="title">func1</span><span class="params">(<span class="keyword">void</span>* arg)</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;++i) <span class="built_in">std</span>::<span class="built_in">cout</span>&lt;&lt;<span class="string">"thread_1: "</span>&lt;&lt;i&lt;&lt;<span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//start routine2</span></span><br><span class="line"><span class="function"><span class="keyword">void</span>* <span class="title">func2</span><span class="params">(<span class="keyword">void</span>* arg)</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;++i) <span class="built_in">std</span>::<span class="built_in">cout</span>&lt;&lt;<span class="string">"thread_2: "</span>&lt;&lt;i&lt;&lt;<span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">pthread_t</span> tidp1;</span><br><span class="line">    <span class="keyword">pthread_t</span> tidp2;</span><br><span class="line">    <span class="comment">//using pthread_create creates a function</span></span><br><span class="line">    <span class="keyword">if</span>(pthread_create(&amp;tidp1,<span class="literal">nullptr</span>,func1,<span class="literal">nullptr</span>)==<span class="number">-1</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//using pthread_create creates a function</span></span><br><span class="line">    <span class="keyword">if</span>(pthread_create(&amp;tidp2,<span class="literal">nullptr</span>,func2,<span class="literal">nullptr</span>)==<span class="number">-1</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;++i) <span class="built_in">std</span>::<span class="built_in">cout</span>&lt;&lt;<span class="string">"thread_main: "</span>&lt;&lt;i&lt;&lt;<span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<strong>Note:</strong> The library “pthread.h” is not a build in library of linux, when you compile source code, you should add commain <strong>-lpthread</strong> like this:<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g++ thread_create.cc -lpthread</span><br></pre></td></tr></table></figure>
+<h2 id="pthread-join"><a href="#pthread-join" class="headerlink" title="pthread_join"></a>pthread_join</h2></li>
+</ul>
+<hr>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">pthread_join</span><span class="params">(<span class="keyword">pthread_t</span> thread,<span class="keyword">void</span>** retval)</span></span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><strong>brief:</strong> The pthread_join() function waits for the thread specified by thread to terminate, If that thread has already terminated, then pthread_join run immediately.The thread specified by thread must be joinable.</p>
+</li>
+<li><p><strong>arguments:</strong> </p>
+<ul>
+<li><strong>-thread:</strong> The thread identifier that is waitted.</li>
+<li><strong>-retval:</strong>  The return value of thread which is waitted</li>
+</ul>
+</li>
+<li><p><strong>return value</strong> On success, pthread_join() returns 0; on error, it returns an error number.</p>
+</li>
+<li><p><strong>Note:</strong> This function is a blocking funtion. Suppose we have two thread, thread A and thread B. If we call pthread_join() int thread A, thread A will blocking wait for the finish of thread B. If we do not call pthread_join, thread A may finish quickly, and thread B can not be executed.</p>
+</li>
+<li><p><strong>Code:</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;pthread.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="comment">//In this program, we do not call pthread_join(), the main </span></span><br><span class="line"><span class="comment">//function finished before thread_1 fininshed.</span></span><br><span class="line"><span class="function"><span class="keyword">void</span>* <span class="title">func1</span><span class="params">(<span class="keyword">void</span>* arg)</span></span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;++i)&#123;</span><br><span class="line">                <span class="built_in">std</span>::<span class="built_in">cout</span>&lt;&lt;<span class="string">"thread_1: "</span>&lt;&lt;i&lt;&lt;<span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">                sleep(<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">pthread_t</span> tid;</span><br><span class="line">        <span class="keyword">if</span>(pthread_create(&amp;tid,<span class="literal">nullptr</span>,func1,<span class="literal">nullptr</span>)==<span class="number">-1</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;++i)&#123;</span><br><span class="line">                <span class="built_in">std</span>::<span class="built_in">cout</span>&lt;&lt;<span class="string">"thread_main: "</span>&lt;&lt;i&lt;&lt;<span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span>&lt;&lt;<span class="string">"Main Function END!"</span>&lt;&lt;<span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Result:<br><img src="https://upload-images.jianshu.io/upload_images/13348038-c5c6cfe7efe3895a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;pthread.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="comment">//The pthread_join() is called, the main thread waits for //thread 1 finish.</span></span><br><span class="line"><span class="function"><span class="keyword">void</span>* <span class="title">func1</span><span class="params">(<span class="keyword">void</span>* arg)</span></span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;++i)&#123;</span><br><span class="line">                <span class="built_in">std</span>::<span class="built_in">cout</span>&lt;&lt;<span class="string">"thread_1: "</span>&lt;&lt;i&lt;&lt;<span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">                sleep(<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">pthread_t</span> tid;</span><br><span class="line">        <span class="keyword">if</span>(pthread_create(&amp;tid,<span class="literal">nullptr</span>,func1,<span class="literal">nullptr</span>)==<span class="number">-1</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">10</span>;++i)&#123;</span><br><span class="line">                <span class="built_in">std</span>::<span class="built_in">cout</span>&lt;&lt;<span class="string">"thread_main: "</span>&lt;&lt;i&lt;&lt;<span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(pthread_join(tid,<span class="literal">nullptr</span>))&#123;</span><br><span class="line">                <span class="built_in">std</span>::<span class="built_in">cout</span>&lt;&lt;<span class="string">"error"</span>&lt;&lt;<span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span>&lt;&lt;<span class="string">"Main Function END!"</span>&lt;&lt;<span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="https://upload-images.jianshu.io/upload_images/13348038-4fd12eaa3611cca6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<h2 id="pthread-detach"><a href="#pthread-detach" class="headerlink" title="pthread_detach"></a>pthread_detach</h2><hr>
+<p><a href="https://note.youdao.com/" target="_blank" rel="noopener">link</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int pthread_detach(pthread_t thread);</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><strong>Brief:</strong> The pthread_detach()  function  marks the thread identified by thread as detached.  When a detached thread terminates, its resources are automati‐cally released back to the system without the need for another thread to join with the terminated thread.Attempting to detach an already detached thread results in unspecified behavior.</li>
+<li><strong>Arguments:</strong><ul>
+<li><strong>-thread:</strong> The detached thread identifier.</li>
+</ul>
+</li>
+<li><p><strong>Return Value:</strong><br>On success, pthread_detach() returns 0; on error, it returns an error number.</p>
+</li>
+<li><p><strong>Code:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;pthread.h&gt;</span><br><span class="line">#include&lt;iostream&gt;</span><br><span class="line">#include&lt;unistd.h&gt;</span><br><span class="line">&#x2F;&#x2F;The func is a dead loop, but the resources of pthread_detach() </span><br><span class="line">&#x2F;&#x2F;marks program are automatically released back to system. So </span><br><span class="line">&#x2F;&#x2F;the loop finished after Main process is finished.</span><br><span class="line">void* func(void* arg)&#123;</span><br><span class="line">        for(;;)&#123;</span><br><span class="line">                std::cout&lt;&lt;&quot;thread_1 running ...&quot;&lt;&lt;std::endl;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main()&#123;</span><br><span class="line">        pthread_t tid;</span><br><span class="line">        if(pthread_create(&amp;tid,nullptr,func,nullptr)&#x3D;&#x3D;-1)&#123;</span><br><span class="line">                return -1;</span><br><span class="line">        &#125;</span><br><span class="line">        pthread_detach(tid);</span><br><span class="line">        std::cout&lt;&lt;&quot;Main Function Done!&quot;&lt;&lt;std::endl;</span><br><span class="line">        return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><img src="https://upload-images.jianshu.io/upload_images/13348038-92c4f0747486ddab.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<h2 id="pthread-self"><a href="#pthread-self" class="headerlink" title="pthread_self"></a>pthread_self</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pthread_t pthread_self(void);</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>Brief:</strong> The pthread_self() function returns the ID of the calling thread.  This is the same value that is returned in *thread in the pthread_create(3) call that created this thread.</li>
+<li><strong>Return:</strong><br>This function always succeeds, returning the calling thread’s ID.</li>
+<li><strong>Code:</strong><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;iostream&gt;</span><br><span class="line">#include&lt;pthread.h&gt;</span><br><span class="line">#include&lt;unistd.h&gt;</span><br><span class="line"></span><br><span class="line">void* func(void* arg)&#123;</span><br><span class="line">        pthread_detach(pthread_self());</span><br><span class="line">        for(;;)&#123;</span><br><span class="line">                std::cout&lt;&lt;&quot;thread 1 running ...\n&quot;;</span><br><span class="line">        &#125;</span><br><span class="line">        std::cout&lt;&lt;std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main()&#123;</span><br><span class="line">        pthread_t tid;</span><br><span class="line">        if(pthread_create(&amp;tid,nullptr,func,nullptr))&#123;</span><br><span class="line">                return -1;</span><br><span class="line">        &#125;</span><br><span class="line">        std::cout&lt;&lt;&quot;Main Function Done!&quot;&lt;&lt;std::endl;</span><br><span class="line">        return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="pthread-exit"><a href="#pthread-exit" class="headerlink" title="pthread_exit"></a>pthread_exit</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">void pthread_exit(void* retval);</span><br></pre></td></tr></table></figure></li>
+<li><p><strong>Brief:</strong></p>
+<p>  The  pthread_exit()  function terminates the calling thread and returns a value via retval that (if the thread is joinable) is available to another<br>  thread in the same process that calls pthread_join(3).</p>
+<p>  Any clean-up handlers established by pthread_cleanup_push(3) that have not yet been popped, are popped (in the reverse of the order in  which  they<br>  were  pushed)  and  executed.   If the thread has any thread-specific data, then, after the clean-up handlers have been executed, the corresponding<br>  destructor functions are called, in an unspecified order.</p>
+<p>  When a thread terminates, process-shared resources (e.g., mutexes, condition variables, semaphores, and file descriptors)  are  not  released,  and<br>  functions registered using atexit(3) are not called.</p>
+<p>  After  the  last  thread  in  a  process terminates, the process terminates as by calling exit(3) with an exit status of zero; thus, process-shared<br>  resources are released and functions registered using atexit(3) are called.</p>
+</li>
+<li><strong>Arguments:</strong><ul>
+<li><strong>-retval:</strong> void* pointer, I do not know the mean of this argument.</li>
+</ul>
+</li>
+<li><strong>Code:</strong><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;iostream&gt;</span><br><span class="line">#include&lt;pthread.h&gt;</span><br><span class="line">#include&lt;unistd.h&gt;</span><br><span class="line"></span><br><span class="line">void* func(void* arg)&#123;</span><br><span class="line">        pthread_detach(pthread_self());</span><br><span class="line">        for(;;)&#123;</span><br><span class="line">                std::cout&lt;&lt;&quot;thread 1 running ...\n&quot;;</span><br><span class="line">        &#125;</span><br><span class="line">        pthread_exit(0);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main()&#123;</span><br><span class="line">        pthread_t tid;</span><br><span class="line">        if(pthread_create(&amp;tid,nullptr,func,nullptr))&#123;</span><br><span class="line">                return -1;</span><br><span class="line">        &#125;</span><br><span class="line">        std::cout&lt;&lt;&quot;Main Function Done!&quot;&lt;&lt;std::endl;</span><br><span class="line">        return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/05/15/Thread-In-Linux/" data-id="cka8b3cj1000qokv60g7gbug7" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/05/15/Mutex-In-Linux/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Mutex In Linux
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/05/15/Pipe-In-Linux/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Pipe In Linux</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Data-Structure/" rel="tag">Data Structure</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Introduce-To-Algorithm/" rel="tag">Introduce To Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/network/" rel="tag">network</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C/" style="font-size: 13.33px;">C++</a> <a href="/tags/Data-Structure/" style="font-size: 13.33px;">Data Structure</a> <a href="/tags/Introduce-To-Algorithm/" style="font-size: 16.67px;">Introduce To Algorithm</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/network/" style="font-size: 10px;">network</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/05/15/What-Compile-Do-When-An-Empty-Class-Is-Declared/">What Compile Do When An Empty Class Is Declared</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/15/Throw-Exception-In-Constructor-And-Destructor/">Throw Exception In Constructor And Destructor</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/15/bind-And-function-In-C/">bind And function In C++</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/15/Variable-Arguments-In-C/">Variable Arguments In C++</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/15/Install-Boost-In-Linux/">Install Boost In Linux</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 BeeCaffe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
