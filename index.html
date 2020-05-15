@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://yoursite.com/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-strassen" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/15/strassen/" class="article-date">
+  <time datetime="2020-05-15T03:46:06.000Z" itemprop="datePublished">2020-05-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/15/strassen/">strassen</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Strassen-Algorithm-Introduction-to-algorithms-Reading-Notes"><a href="#Strassen-Algorithm-Introduction-to-algorithms-Reading-Notes" class="headerlink" title="Strassen Algorithm - Introduction to algorithms Reading Notes"></a>Strassen Algorithm - <em>Introduction to algorithms</em> Reading Notes</h1><p>Matrix multiplication is an extremely time-consuming operation, e.g. C=A <em> B, where A and B are nxn matrix, and the time complexity of the multiplication of A </em> B is O(n<sup>3</sup>). In this blog, I am going to introduce an algrithm which is able to reduce the time complexity of matrix multiplacation to O<sup>(n^log7)</sup> =O(n<sup>2.8</sup>).</p>
+<h2 id="Simple-Divide-And-Conqure-Algorithm"><a href="#Simple-Divide-And-Conqure-Algorithm" class="headerlink" title="Simple Divide And Conqure Algorithm"></a>Simple Divide And Conqure Algorithm</h2><hr>
+<p>The simplest idea of optimizing matrix multiplication is reducing the scale of matrix. In this algorithm, we divide the matrix A and B into  four sub-matrix as following:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">\left[</span><br><span class="line"> \begin&#123;matrix&#125;</span><br><span class="line">   C11 &amp; C12\\</span><br><span class="line">   C21 &amp; C22 \\</span><br><span class="line">  \end&#123;matrix&#125; </span><br><span class="line">\right]</span><br><span class="line">&#x3D;</span><br><span class="line">\left[</span><br><span class="line"> \begin&#123;matrix&#125;</span><br><span class="line">   A11 &amp; A12\\</span><br><span class="line">   A21 &amp; A22 \\</span><br><span class="line">  \end&#123;matrix&#125; </span><br><span class="line">\right]+</span><br><span class="line">\left[</span><br><span class="line"> \begin&#123;matrix&#125;</span><br><span class="line">   B11 &amp; B12\\</span><br><span class="line">   B21 &amp; B22 \\</span><br><span class="line">  \end&#123;matrix&#125; </span><br><span class="line">\right]</span><br></pre></td></tr></table></figure>
+<p>That is:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">C11 &#x3D; A11 • B11 + A12 • B21\\</span><br><span class="line">C12 &#x3D; A11 • B12 + A12 • B22\\</span><br><span class="line">C21 &#x3D; A21 • B11 + A22 • B21\\</span><br><span class="line">C22 &#x3D; A21 • B12 + A22 • B22</span><br></pre></td></tr></table></figure><br>For each sub matrix Cij, we need to compute two time of matrix mutiplication in n/2 level, and a matrix addition in O(n<sup>2</sup>) level. Therefore, the time complexity of simple divide is:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">T(n)&#x3D;8T(n&#x2F;2)+O(n2)</span><br></pre></td></tr></table></figure><br>However, the time complexity of T(n/2) is close to O(n<sup>3</sup>), thus the effiency of simple divide is not better than previous method.</p>
+<h2 id="Strassen-Algorithm"><a href="#Strassen-Algorithm" class="headerlink" title="Strassen Algorithm"></a>Strassen Algorithm</h2><p>In 1969, Volker Strassen caused quite a stir when he published an article proposing a matrix multiplication algorithm that was asymptotically faster than a trivial one. Before this, few people dared to imagine that an algorithm could asymptotically be faster than a trivial algorithm. The asymptotic upper bound of matrix multiplication has since been improved.<br>Let’s go back and see why divide-and-conquer didn’t work.<br>Because the problem after decomposition involves eight times of matrix multiplication and four times of matrix addition, it is these eight times of matrix multiplication that cause the speed to not increase. So we figured out if we could reduce the number of times we multiply matrices, and instead increase the number of times we add matrices. Strassen takes advantage of this.<br>Now, let’s look at how Strassen works.</p>
+<p>Again, divide each matrix into 4 parts, and then create the following 10 intermediate matrices:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">S1 &#x3D; B12 - B22\\</span><br><span class="line">S2 &#x3D; A11 + A12\\</span><br><span class="line">S3 &#x3D; A21 + A22\\</span><br><span class="line">S4 &#x3D; B21 - B11\\</span><br><span class="line">S5 &#x3D; A11 + A22\\</span><br><span class="line">S6 &#x3D; B11 + B22\\</span><br><span class="line">S7 &#x3D; A12 - A22\\</span><br><span class="line">S8 &#x3D; B21 + B22\\</span><br><span class="line">S9 &#x3D; A11 - A21\\</span><br><span class="line">S10 &#x3D; B11 + B12</span><br></pre></td></tr></table></figure></p>
+<p>Then, calculate the matrix multiplication for 7 times:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">P1 &#x3D; A11 • S1\\</span><br><span class="line">P2 &#x3D; S2 • B22\\</span><br><span class="line">P3 &#x3D; S3 • B11\\</span><br><span class="line">P4 &#x3D; A22 • S4\\</span><br><span class="line">P5 &#x3D; S5 • S6\\</span><br><span class="line">P6 &#x3D; S7 • S8\\</span><br><span class="line">P7 &#x3D; S9 • S10</span><br></pre></td></tr></table></figure></p>
+<p>Finally, the C matrix can be calculated according to these 7 results:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">C11 &#x3D; P5 + P4 - P2 + P6\\</span><br><span class="line">C12 &#x3D; P1 + P2\\</span><br><span class="line">C21 &#x3D; P3 + P4\\</span><br><span class="line">C22 &#x3D; P5 + P1 - P3 - P7</span><br></pre></td></tr></table></figure></p>
+<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;math.h&gt;</span><br><span class="line"></span><br><span class="line">#define SIZE 16</span><br><span class="line"></span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">void ReadMatrix(double**,int);</span><br><span class="line">void WriteMatrix(double**,int);</span><br><span class="line"></span><br><span class="line">void MatrixAdd(double **A, double **B, double **Result, int N);</span><br><span class="line">void MatrixSubtrac(double **A, double **B, double **Result, int N);</span><br><span class="line"></span><br><span class="line">void StrassenAlgorithm(double **A, double **B, double **C, int N);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#x2F;* For taking input from standard input(keyboard)*&#x2F;</span><br><span class="line">void ReadMatrix(double A[][SIZE],int N)</span><br><span class="line">&#123;</span><br><span class="line">    int i,j;</span><br><span class="line"></span><br><span class="line">    for(i&#x3D;0; i&lt;N; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        for(j&#x3D;0; j&lt;N; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            scanf(&quot;%lf&quot;, &amp;A[i][j]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;*For printing the matrix in standard output(console)*&#x2F;</span><br><span class="line">void WriteMatrix(double A[][SIZE], int N)</span><br><span class="line">&#123;</span><br><span class="line">    int i, j;</span><br><span class="line"></span><br><span class="line">    for(i&#x3D;0; i&lt;N; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        for(j&#x3D;0; j&lt;N; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            printf(&quot;%0.1lf \t&quot;, A[i][j]);</span><br><span class="line">        &#125;</span><br><span class="line">        printf(&quot;\n&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;*This function will add two square matrix*&#x2F;</span><br><span class="line">void MatrixAdd(double A[][SIZE], double B[][SIZE], double Result[][SIZE], int N)</span><br><span class="line">&#123;</span><br><span class="line">    int i, j;</span><br><span class="line"></span><br><span class="line">    for(i&#x3D;0; i&lt; N; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        for(j&#x3D;0; j&lt;N; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            Result[i][j] &#x3D; A[i][j] + B[i][j];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;*This function will subtract one  square matrix from another*&#x2F;</span><br><span class="line">void MatrixSubtrac(double A[][SIZE], double B[][SIZE], double Result[][SIZE], int N)</span><br><span class="line">&#123;</span><br><span class="line">    int i, j;</span><br><span class="line"></span><br><span class="line">    for(i&#x3D;0; i&lt; N; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        for(j&#x3D;0; j&lt;N; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            Result[i][j] &#x3D; A[i][j] - B[i][j];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#x2F;*This is the strassen algorithm. (Divide and Conqure)*&#x2F;</span><br><span class="line">void StrassenAlgorithm(double A[][SIZE], double B[][SIZE], double C[][SIZE], int N)</span><br><span class="line">&#123;</span><br><span class="line">    &#x2F;&#x2F; trivial case: when the matrice is 1 X 1:</span><br><span class="line">    if(N &#x3D;&#x3D; 1)</span><br><span class="line">    &#123;</span><br><span class="line">        C[0][0] &#x3D; A[0][0] * B[0][0];</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F; other cases are treated here:</span><br><span class="line">    else</span><br><span class="line">    &#123;</span><br><span class="line">        int Divide  &#x3D; (int)(N&#x2F;2);</span><br><span class="line"></span><br><span class="line">        double A11[SIZE][SIZE], A12[SIZE][SIZE], A21[SIZE][SIZE], A22[SIZE][SIZE];</span><br><span class="line">        double B11[SIZE][SIZE], B12[SIZE][SIZE], B21[SIZE][SIZE], B22[SIZE][SIZE];</span><br><span class="line">        double C11[SIZE][SIZE], C12[SIZE][SIZE], C21[SIZE][SIZE], C22[SIZE][SIZE];</span><br><span class="line">        double P1[SIZE][SIZE], P2[SIZE][SIZE], P3[SIZE][SIZE], P4[SIZE][SIZE], P5[SIZE][SIZE], P6[SIZE][SIZE], P7[SIZE][SIZE];</span><br><span class="line">        double AResult[SIZE][SIZE], BResult[SIZE][SIZE];</span><br><span class="line"></span><br><span class="line">        int i, j;</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F;dividing the matrices in 4 sub-matrices:</span><br><span class="line">        for (i &#x3D; 0; i &lt; Divide; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            for (j &#x3D; 0; j &lt; Divide; j++)</span><br><span class="line">            &#123;</span><br><span class="line">                A11[i][j] &#x3D; A[i][j];</span><br><span class="line">                A12[i][j] &#x3D; A[i][j + Divide];</span><br><span class="line">                A21[i][j] &#x3D; A[i + Divide][j];</span><br><span class="line">                A22[i][j] &#x3D; A[i + Divide][j + Divide];</span><br><span class="line"></span><br><span class="line">                B11[i][j] &#x3D; B[i][j];</span><br><span class="line">                B12[i][j] &#x3D; B[i][j + Divide];</span><br><span class="line">                B21[i][j] &#x3D; B[i + Divide][j];</span><br><span class="line">                B22[i][j] &#x3D; B[i + Divide][j + Divide];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F; Calculating p1 to p7:</span><br><span class="line">        &#x2F;*For details -- Introduction to Algorithms 3rd Edition by CLRS*&#x2F;</span><br><span class="line"></span><br><span class="line">        MatrixAdd(A11, A22, AResult, Divide);   &#x2F;&#x2F; a11 + a22</span><br><span class="line">        MatrixAdd(B11, B22, BResult, Divide);   &#x2F;&#x2F; b11 + b22</span><br><span class="line">        StrassenAlgorithm(AResult, BResult, P1, Divide);  &#x2F;&#x2F; p1 &#x3D; (a11+a22) * (b11+b22)</span><br><span class="line"></span><br><span class="line">        MatrixAdd(A21, A22, AResult, Divide);   &#x2F;&#x2F; a21 + a22</span><br><span class="line">        StrassenAlgorithm(AResult, B11, P2, Divide); &#x2F;&#x2F; p2 &#x3D; (a21+a22) * (b11)</span><br><span class="line"></span><br><span class="line">        MatrixSubtrac(B12, B22, BResult, Divide); &#x2F;&#x2F; b12 - b22</span><br><span class="line">        StrassenAlgorithm(A11, BResult, P3, Divide); &#x2F;&#x2F; p3 &#x3D; (a11) * (b12 - b22)</span><br><span class="line"></span><br><span class="line">        MatrixSubtrac(B21, B11, BResult, Divide); &#x2F;&#x2F; b21 - b11</span><br><span class="line">        StrassenAlgorithm(A22, BResult, P4, Divide); &#x2F;&#x2F; p4 &#x3D; (a22) * (b21 - b11)</span><br><span class="line"></span><br><span class="line">        MatrixAdd(A11, A12, AResult, Divide); &#x2F;&#x2F; a11 + a12</span><br><span class="line">        StrassenAlgorithm(AResult, B22, P5, Divide); &#x2F;&#x2F; p5 &#x3D; (a11+a12) * (b22)</span><br><span class="line"></span><br><span class="line">        MatrixSubtrac(A21, A11, AResult, Divide); &#x2F;&#x2F; a21 - a11</span><br><span class="line">        MatrixAdd(B11, B12, BResult, Divide); &#x2F;&#x2F; b11 + b12</span><br><span class="line">        StrassenAlgorithm(AResult, BResult, P6, Divide); &#x2F;&#x2F; p6 &#x3D; (a21-a11) * (b11+b12)</span><br><span class="line"></span><br><span class="line">        MatrixSubtrac(A12, A22, AResult, Divide); &#x2F;&#x2F; a12 - a22</span><br><span class="line">        MatrixAdd(B21, B22, BResult, Divide); &#x2F;&#x2F; b21 + b22</span><br><span class="line">        StrassenAlgorithm(AResult, BResult, P7, Divide); &#x2F;&#x2F; p7 &#x3D; (a12-a22) * (b21+b22)</span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F; calculating c21, c21, c11 e c22:</span><br><span class="line"></span><br><span class="line">        MatrixAdd(P3, P5, C12, Divide); &#x2F;&#x2F; c12 &#x3D; p3 + p5</span><br><span class="line">        MatrixAdd(P2, P4, C21, Divide); &#x2F;&#x2F; c21 &#x3D; p2 + p4</span><br><span class="line"></span><br><span class="line">        MatrixAdd(P1, P4, AResult, Divide); &#x2F;&#x2F; p1 + p4</span><br><span class="line">        MatrixAdd(AResult, P7, BResult, Divide); &#x2F;&#x2F; p1 + p4 + p7</span><br><span class="line">        MatrixSubtrac(BResult, P5, C11, Divide); &#x2F;&#x2F; c11 &#x3D; p1 + p4 - p5 + p7</span><br><span class="line"></span><br><span class="line">        MatrixAdd(P1, P3, AResult, Divide); &#x2F;&#x2F; p1 + p3</span><br><span class="line">        MatrixAdd(AResult, P6, BResult, Divide); &#x2F;&#x2F; p1 + p3 + p6</span><br><span class="line">        MatrixSubtrac(BResult, P2, C22, Divide); &#x2F;&#x2F; c22 &#x3D; p1 + p3 - p2 + p6</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        &#x2F;&#x2F; Grouping the results obtained in a single matrice:</span><br><span class="line"></span><br><span class="line">        for (i &#x3D; 0; i &lt; Divide ; i++)</span><br><span class="line">        &#123;</span><br><span class="line">            for (j &#x3D; 0 ; j &lt; Divide ; j++)</span><br><span class="line">            &#123;</span><br><span class="line">                C[i][j] &#x3D; C11[i][j];</span><br><span class="line">                C[i][j + Divide] &#x3D; C12[i][j];</span><br><span class="line">                C[i + Divide][j] &#x3D; C21[i][j];</span><br><span class="line">                C[i + Divide][j + Divide] &#x3D; C22[i][j];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;*The main function*&#x2F;</span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    double A[SIZE][SIZE], B[SIZE][SIZE], C[SIZE][SIZE];</span><br><span class="line">    int i,j;</span><br><span class="line">    int N,M,Count &#x3D; 0;</span><br><span class="line"></span><br><span class="line">    printf(&quot;What Is The Dimention: &quot;);</span><br><span class="line">    scanf(&quot;%d&quot;,&amp;N);</span><br><span class="line"></span><br><span class="line">    M &#x3D; N;</span><br><span class="line"></span><br><span class="line">    printf(&quot;Matrix A:\n&quot;);</span><br><span class="line">    ReadMatrix(A,M);</span><br><span class="line">    printf(&quot;Matrix B:\n&quot;);</span><br><span class="line">    ReadMatrix(B,M);</span><br><span class="line"></span><br><span class="line">    if(M &gt; 1)</span><br><span class="line">    &#123;</span><br><span class="line"></span><br><span class="line">        while(M&gt;&#x3D;2)</span><br><span class="line">        &#123;</span><br><span class="line">            M&#x2F;&#x3D;2;</span><br><span class="line">            Count++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        M &#x3D; N;</span><br><span class="line"></span><br><span class="line">        if(M !&#x3D; (pow(2.0,Count)))</span><br><span class="line">        &#123;</span><br><span class="line">            N &#x3D; pow(2.0,Count+1);</span><br><span class="line"></span><br><span class="line">            for(i&#x3D;0; i&lt;N; i++)</span><br><span class="line">            &#123;</span><br><span class="line">                for(j&#x3D;0; j&lt;N; j++)</span><br><span class="line">                &#123;</span><br><span class="line">                    if((i&gt;&#x3D;M) || (j&gt;&#x3D;M))</span><br><span class="line">                    &#123;</span><br><span class="line">                        A[i][j] &#x3D; 0.0;</span><br><span class="line">                        B[i][j] &#x3D; 0.0;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    StrassenAlgorithm(A,B,C,N); &#x2F;&#x2F; StrassenAlgorithm called here</span><br><span class="line">    printf(&quot;Matrix A:\n\n&quot;);</span><br><span class="line">    WriteMatrix(A,M);</span><br><span class="line">    printf(&quot;Matrix B:\n\n&quot;);</span><br><span class="line">    WriteMatrix(B,M);</span><br><span class="line">    printf(&quot;The Product Of These Two Matrix:\n\n&quot;);</span><br><span class="line">    WriteMatrix(C,M);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/05/15/strassen/" data-id="cka7nu5e90000v8v673up6v5z" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/15/hello-world/" class="article-date">
+  <time datetime="2020-05-15T03:42:14.442Z" itemprop="datePublished">2020-05-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/15/hello-world/">Hello World</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/05/15/hello-world/" data-id="cka7nqk6r00005kv61kjp32jg" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/05/15/strassen/">strassen</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/15/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
