@@ -2,6 +2,41 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2020/05/15/Insertion-Sort/</loc>
+    
+    <lastmod>2020-05-15T04:13:50.036Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2020/05/15/Selection-Sort/</loc>
+    
+    <lastmod>2020-05-15T04:12:54.921Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2020/05/15/Merge-Sort/</loc>
+    
+    <lastmod>2020-05-15T04:12:05.092Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2020/05/15/Bubble-Sort/</loc>
+    
+    <lastmod>2020-05-15T04:10:31.206Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2020/05/15/Reverse-Pairs/</loc>
+    
+    <lastmod>2020-05-15T04:09:07.003Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2020/05/15/Find-Max-SubArray/</loc>
     
     <lastmod>2020-05-15T03:57:58.266Z</lastmod>
