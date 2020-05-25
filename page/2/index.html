@@ -64,6 +64,141 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-RWLock-In-Linux" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/15/RWLock-In-Linux/" class="article-date">
+  <time datetime="2020-05-15T14:28:33.000Z" itemprop="datePublished">2020-05-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/15/RWLock-In-Linux/">RWLock In Linux</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Mutex Lock blocks all the threads which attempts to enter critical section. However, the enter cirtical section operation can be divided into read data and write data. According to this principle, the lock can be separted as read lock and write lock. The read-write lock requires to obey the following rules:</p>
+<ul>
+<li>as long as no thread holds any write lock, any threads can get any type (read or write) lock to read.</li>
+<li>when and only when no lock is used to write or read, write lock can be allocated and used to write.</li>
+</ul>
+<p>That is to say, as long as no thread is modifing critical section, any type lock can be used to read. When and only when on any other threads are modifing critical section, write lock is able to write.</p>
+<h1 id="header"><a href="#header" class="headerlink" title="header"></a>header</h1><hr>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;pthread.h&gt;</span></span></span><br></pre></td></tr></table></figure>
+<h2 id="category"><a href="#category" class="headerlink" title="category"></a>category</h2><p><a href="#pthread_rwlock_t">pthread_rwlock_t</a></p>
+<p><a href="#pthread_rwlock_rdlock">pthread_rwlock_rdlock</a></p>
+<p><a href="#pthread_rwlock_wrlock">pthread_rwlock_wrlock</a></p>
+<p><a href="#pthread_rwlock_unlock">pthread_rwlock_unlock</a></p>
+<p><a href="#pthread_rwlock_trywrlock">pthread_rwlock_tryrdlock</a></p>
+<p><a href="#pthread_rwlock_trywrlock">pthread_rwlock_trywrlock</a></p>
+<p><a href="pthread_rwlock_destroy">pthread_rwlock_destroy</a></p>
+<p><a href="#pthread_rwlockattr_init">pthread_rwlockattr_init</a></p>
+<p><a href="pthread_rwlockattr_destroy">pthread_rwlockattr_destroy</a></p>
+<p><a href="pthread_rwlockattr_getpshared">pthread_rwlockattr_getpshared</a></p>
+<p><a href="pthread_rwlockattr_setpshared">pthread_rwlockattr_setpshared</a></p>
+<h2 id="pthread-rwlock-t"><a href="#pthread-rwlock-t" class="headerlink" title="pthread_rwlock_t"></a>pthread_rwlock_t</h2><hr>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//The defination of pthread_rwlock_t</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span>&#123;</span></span><br><span class="line">    <span class="keyword">pthread_mutex_t</span> rw_mutex;   <span class="comment">/*basic lock on this struct*/</span></span><br><span class="line">    <span class="keyword">pthread_cond_t</span> rw_condreaders;  <span class="comment">/*for reader threads waiting*/</span></span><br><span class="line">    <span class="keyword">pthread_cond_t</span> rw_condwriters;  <span class="comment">/*for writer threads waiting*/</span></span><br><span class="line">    <span class="keyword">int</span> rw_magic;   <span class="comment">/*for error checking*/</span></span><br><span class="line">    <span class="keyword">int</span> rw_nwaitreaders;    <span class="comment">/*the number waiting*/</span></span><br><span class="line">    <span class="keyword">int</span> rw_nwaitwriters;    <span class="comment">/*the number waiting*/</span></span><br><span class="line">    <span class="keyword">int</span> rw_refcount;    <span class="comment">/*-1 if writer has the lock, else readers holding the lock*/</span></span><br><span class="line">&#125;<span class="keyword">pthread_rwlock_t</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> PTHREAD_RWLOCK_INITIALIZER&#123;</span></span><br><span class="line">    PTHREAD_LOCK_INITIALIZER,</span><br><span class="line">    PTHREAD_COND_INITIALIZER,</span><br><span class="line">    PTHREAD_COND_INITIALIZER,</span><br><span class="line">    RW_MAGIC,</span><br><span class="line">    <span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="pthread-rwlock-rdlock"><a href="#pthread-rwlock-rdlock" class="headerlink" title="pthread_rwlock_rdlock"></a>pthread_rwlock_rdlock</h2><hr>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//get a read lock, if the lock hold by other thread, blocking and waiting for unlocking.</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">pthread_rwlock_rdlock</span><span class="params">(<span class="keyword">pthread_rwlock_t</span> *rwptr)</span></span>;</span><br><span class="line"></span><br><span class="line">args:</span><br><span class="line">    -rwptr: the read-write lock</span><br><span class="line">    </span><br><span class="line"><span class="keyword">return</span>:</span><br><span class="line">    seccessed: <span class="number">0</span></span><br><span class="line">    error: EXXX</span><br></pre></td></tr></table></figure>
+<h2 id="pthread-rwlock-wrlock"><a href="#pthread-rwlock-wrlock" class="headerlink" title="pthread_rwlock_wrlock"></a>pthread_rwlock_wrlock</h2><hr>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//get a write lock, if lock is got by other threads, blocking and waiting for unlocking.</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">pthread_rwlock_wrlock</span><span class="params">(<span class="keyword">pthread_rwlock_t</span> *rwptr)</span></span>;</span><br><span class="line"></span><br><span class="line">args:</span><br><span class="line">    -rwptr: the read-write lock</span><br><span class="line">    </span><br><span class="line"><span class="keyword">return</span>:</span><br><span class="line">    seccessed: <span class="number">0</span></span><br><span class="line">    error: EXXX</span><br></pre></td></tr></table></figure>
+<h2 id="pthread-rwlock-unlock"><a href="#pthread-rwlock-unlock" class="headerlink" title="pthread_rwlock_unlock"></a>pthread_rwlock_unlock</h2><hr>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//release a read-wirte lock</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">pthread_rwlock_unlock</span><span class="params">(<span class="keyword">pthread_rwlock_t</span> *rwptr)</span></span>;</span><br><span class="line"></span><br><span class="line">args:</span><br><span class="line">    -rwptr: the read-write lock</span><br><span class="line">    </span><br><span class="line"><span class="keyword">return</span>:</span><br><span class="line">    seccessed: <span class="number">0</span></span><br><span class="line">    error: EXXX</span><br></pre></td></tr></table></figure>
+<h2 id="pthread-rwlock-tryrdlock"><a href="#pthread-rwlock-tryrdlock" class="headerlink" title="pthread_rwlock_tryrdlock"></a>pthread_rwlock_tryrdlock</h2><hr>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//gets a read lock, if the lock hold by other thread, return a EXXX without blocking</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">pthread_rwlock_tryrdlock</span><span class="params">(<span class="keyword">pthread_rwlock_t</span> *rwptr)</span></span>;</span><br><span class="line"></span><br><span class="line">args:</span><br><span class="line">    -rwptr: the read-write lock</span><br><span class="line">    </span><br><span class="line"><span class="keyword">return</span>:</span><br><span class="line">    seccessed: <span class="number">0</span></span><br><span class="line">    error: EXXX</span><br></pre></td></tr></table></figure>
+<h2 id="pthread-rwlock-trywrite"><a href="#pthread-rwlock-trywrite" class="headerlink" title="pthread_rwlock_trywrite"></a>pthread_rwlock_trywrite</h2><hr>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//gets a write lock, if the lock hold by other thread, return a EXXX without blocking</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">pthread_rwlock_trywrlock</span><span class="params">(<span class="keyword">pthread_rwlock_t</span> *rwptr)</span></span>;</span><br><span class="line"></span><br><span class="line">args:</span><br><span class="line">    -rwptr: the read-write lock</span><br><span class="line">    </span><br><span class="line"><span class="keyword">return</span>:</span><br><span class="line">    seccessed: <span class="number">0</span></span><br><span class="line">    error: EXXX</span><br></pre></td></tr></table></figure>
+<h2 id="pthread-rwlock-init"><a href="#pthread-rwlock-init" class="headerlink" title="pthread_rwlock_init"></a>pthread_rwlock_init</h2><hr>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//initializes a read-write lock</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">pthread_rwlock_init</span><span class="params">(<span class="keyword">pthread_rwlock_t</span> *rwptr,<span class="keyword">const</span> <span class="keyword">pthread_rwlockattr_t</span> *attr)</span></span>;</span><br><span class="line"></span><br><span class="line">args:</span><br><span class="line">    -rwptr: the read-write lock</span><br><span class="line">    -attr: the attribute</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span>:</span><br><span class="line">    seccessed: <span class="number">0</span></span><br><span class="line">    error: EXXX</span><br></pre></td></tr></table></figure>
+<h2 id="pthread-rwlock-destroy"><a href="#pthread-rwlock-destroy" class="headerlink" title="pthread_rwlock_destroy"></a>pthread_rwlock_destroy</h2><hr>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//destroy a read-write lock</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">pthread_rwlock_destroy</span><span class="params">(<span class="keyword">pthread_rwlock_t</span> *rwptr)</span></span>;</span><br><span class="line"></span><br><span class="line">args:</span><br><span class="line">    -rwptr: the read-write lock</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span>:</span><br><span class="line">    seccessed: <span class="number">0</span></span><br><span class="line">    error: EXXX</span><br></pre></td></tr></table></figure>
+<h2 id="pthread-rwlockattr-init"><a href="#pthread-rwlockattr-init" class="headerlink" title="pthread_rwlockattr_init"></a>pthread_rwlockattr_init</h2><hr>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//set a pthread_rwlockattr_t</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">pthread_rwlockattr_init</span><span class="params">(<span class="keyword">pthread_rwlock_t</span> *attr)</span></span>;</span><br><span class="line"></span><br><span class="line">args:</span><br><span class="line">    -attr: the attribute</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span>:</span><br><span class="line">    seccessed: <span class="number">0</span></span><br><span class="line">    error: EXXX</span><br></pre></td></tr></table></figure>
+<h2 id="pthread-rwlockattr-destroy"><a href="#pthread-rwlockattr-destroy" class="headerlink" title="pthread_rwlockattr_destroy"></a>pthread_rwlockattr_destroy</h2><hr>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//destroy a pthread_rwlockattr_t</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">pthread_rwlockattr_destroy</span><span class="params">(<span class="keyword">pthread_rwlock_t</span> *attr)</span></span>;</span><br><span class="line"></span><br><span class="line">args:</span><br><span class="line">    -attr: the attribute</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span>:</span><br><span class="line">    seccessed: <span class="number">0</span></span><br><span class="line">    error: EXXX</span><br></pre></td></tr></table></figure>
+<h2 id="pthread-rwlockattr-getpshared"><a href="#pthread-rwlockattr-getpshared" class="headerlink" title="pthread_rwlockattr_getpshared"></a>pthread_rwlockattr_getpshared</h2><hr>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">pthread_rwlockattr_getpshared</span><span class="params">(<span class="keyword">pthread_rwlock_t</span> *attr,<span class="keyword">int</span> *valptr)</span></span>;</span><br><span class="line"></span><br><span class="line">args:</span><br><span class="line">    -attr: the attribute</span><br><span class="line">    -valptr: the attribute value</span><br><span class="line"><span class="keyword">return</span>:</span><br><span class="line">    seccessed: <span class="number">0</span></span><br><span class="line">    error: EXXX</span><br></pre></td></tr></table></figure>
+<h2 id="pthread-rwlockattr-setpshared"><a href="#pthread-rwlockattr-setpshared" class="headerlink" title="pthread_rwlockattr_setpshared"></a>pthread_rwlockattr_setpshared</h2><hr>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">pthread_rwlockattr_setpshared</span><span class="params">(<span class="keyword">pthread_rwlock_t</span> *attr,<span class="keyword">int</span> *valptr)</span></span>;</span><br><span class="line"></span><br><span class="line">args:</span><br><span class="line">    -attr: the attribute</span><br><span class="line">    -valptr: the attribute value</span><br><span class="line"><span class="keyword">return</span>:</span><br><span class="line">    seccessed: <span class="number">0</span></span><br><span class="line">    error: EXXX</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/05/15/RWLock-In-Linux/" data-id="cka8b3civ000bokv6dartgzi7" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Mutex-In-Linux" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/15/Mutex-In-Linux/" class="article-date">
+  <time datetime="2020-05-15T14:27:58.000Z" itemprop="datePublished">2020-05-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/15/Mutex-In-Linux/">Mutex In Linux</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="header"><a href="#header" class="headerlink" title="header"></a>header</h2><hr>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;thread.h&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="category"><a href="#category" class="headerlink" title="category"></a>category</h2><hr>
+<p><a href="#pthread_mutex_t">pthread_mutex_t</a></p>
+<p><a href="#pthread_mutex_lock">pthread_mutex_lock</a></p>
+<p><a href="#pthread_mutex_trylock">pthread_mutex_trylock</a></p>
+<p><a href="pthread_mutex_init">pthread_muext_init</a></p>
+<p><a href="#pthread_mutex_unlock">pthread_mutex_unlock</a></p>
+<p><a href="#pthread_mutex_destroy">pthread_mutex_destroy</a></p>
+<h2 id="pthread-mutex-t"><a href="#pthread-mutex-t" class="headerlink" title="pthread_mutex_t"></a>pthread_mutex_t</h2><p>The pthread_mutex_t is a mutex data type, which can be initialized by two methods.<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// if pthread_mutex_t is declared as a static variable</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">pthread_mutex_t</span> lock=PTHREAD_MUTEX_INITILIZER;</span><br><span class="line"></span><br><span class="line"><span class="comment">// if pthread_mutex_t is declared as a dynamic variable</span></span><br><span class="line"><span class="keyword">pthread_mutex_t</span>* lock;</span><br><span class="line">pthread_mutex_init(lock);</span><br></pre></td></tr></table></figure></p>
+<h2 id="pthread-mutex-lock"><a href="#pthread-mutex-lock" class="headerlink" title="pthread_mutex_lock"></a>pthread_mutex_lock</h2><p>Try to lock a mutex, if the mutex is locked, blocking and waiting for until it is unlock.<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//lock a mutex variable</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">pthread_mutex_lock</span><span class="params">(<span class="keyword">pthread_mutex_t</span> *mptr)</span></span>;</span><br><span class="line"></span><br><span class="line">args:</span><br><span class="line">    -mptr: a pointer of mutex.</span><br><span class="line"><span class="keyword">return</span>: </span><br><span class="line">    successed: <span class="number">0</span></span><br><span class="line">    error: EXXX</span><br></pre></td></tr></table></figure></p>
+<h2 id="pthread-mutex-trylock"><a href="#pthread-mutex-trylock" class="headerlink" title="pthread_mutex_trylock"></a>pthread_mutex_trylock</h2><p>Try to lock a mutex, if it is locked, return a EBUSY.<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">pthread_mutex_trylock</span><span class="params">(<span class="keyword">pthread_mutex_t</span> *mptr)</span></span>;</span><br><span class="line"></span><br><span class="line">args:</span><br><span class="line">    -mptr: a pointer of mutex.</span><br><span class="line"><span class="keyword">return</span>: </span><br><span class="line">    successed: <span class="number">0</span></span><br><span class="line">    error: EXXX</span><br></pre></td></tr></table></figure></p>
+<h2 id="pthread-mutex-unlock"><a href="#pthread-mutex-unlock" class="headerlink" title="pthread_mutex_unlock"></a>pthread_mutex_unlock</h2><p>unlock a mutex, if it is unlock, blocking and waitting.<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">pthread_mutex_unlock</span><span class="params">(<span class="keyword">pthread_mutex_t</span> *mptr)</span></span>;</span><br><span class="line"></span><br><span class="line">args:</span><br><span class="line">    -mptr: a pointer of mutex</span><br><span class="line"><span class="keyword">return</span>:</span><br><span class="line">    successed: <span class="number">0</span></span><br><span class="line">    error: EXXX</span><br></pre></td></tr></table></figure></p>
+<h2 id="pthread-mutex-destroy"><a href="#pthread-mutex-destroy" class="headerlink" title="pthread_mutex_destroy"></a>pthread_mutex_destroy</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">pthread_mutex_init</span><span class="params">(<span class="keyword">pthread_mutex_t</span> *mutex,<span class="keyword">const</span> <span class="keyword">pthread_mutexattr_t</span> attr)</span></span>;</span><br><span class="line"></span><br><span class="line">args:</span><br><span class="line">    -mutex: the mutex type</span><br><span class="line">    -attr: attribute of mutex</span><br><span class="line"><span class="keyword">return</span>:</span><br><span class="line">    successed: <span class="number">0</span></span><br><span class="line">    error: Exxx</span><br></pre></td></tr></table></figure>
+<h2 id="pthread-mutex-init"><a href="#pthread-mutex-init" class="headerlink" title="pthread_mutex_init"></a>pthread_mutex_init</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">pthread_mutex_destroy</span><span class="params">(<span class="keyword">pthread_mutex_t</span>* mutex)</span></span>;</span><br><span class="line"></span><br><span class="line">args:</span><br><span class="line">    -mutex: the mutex type</span><br><span class="line"><span class="keyword">return</span>:</span><br><span class="line">    successed: <span class="number">0</span></span><br><span class="line">    error: EXXX</span><br></pre></td></tr></table></figure>
+<h2 id="Code"><a href="#Code" class="headerlink" title="Code:"></a>Code:</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//consumer and producer model</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;pthread.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Shared</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">        <span class="keyword">static</span> <span class="keyword">pthread_mutex_t</span> lock;</span><br><span class="line">        <span class="keyword">static</span> <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; <span class="built_in">array</span>;</span><br><span class="line">        <span class="keyword">static</span> <span class="keyword">int</span> nmax;</span><br><span class="line">        <span class="keyword">static</span> <span class="keyword">int</span> ncur;</span><br><span class="line">        <span class="keyword">static</span> <span class="keyword">int</span> nval;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">pthread_mutex_t</span> Shared::lock=PTHREAD_MUTEX_INITIALIZER;</span><br><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; Shared::<span class="built_in">array</span>;</span><br><span class="line"><span class="keyword">int</span> Shared::nmax=<span class="number">0</span>;</span><br><span class="line"><span class="keyword">int</span> Shared::ncur=<span class="number">0</span>;</span><br><span class="line"><span class="keyword">int</span> Shared::nval=<span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span>* <span class="title">producer</span><span class="params">(<span class="keyword">void</span>* arg)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(;;)&#123;</span><br><span class="line">                pthread_mutex_lock(&amp;Shared::lock);</span><br><span class="line">                <span class="built_in">std</span>::<span class="built_in">cout</span>&lt;&lt;<span class="string">"thread ["</span>&lt;&lt;pthread_self()&lt;&lt;<span class="string">"] is writing value: "</span>&lt;&lt;Shared::nval&lt;&lt;<span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">                <span class="keyword">if</span>(Shared::ncur&gt;=Shared::nmax)&#123;</span><br><span class="line">                        pthread_mutex_unlock(&amp;Shared::lock);</span><br><span class="line">                        <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                Shared::<span class="built_in">array</span>.push_back(Shared::nval);</span><br><span class="line">                Shared::ncur++;</span><br><span class="line">                Shared::nval++;</span><br><span class="line">                pthread_mutex_unlock(&amp;Shared::lock);</span><br><span class="line">                sleep(<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span>* <span class="title">consumer</span><span class="params">(<span class="keyword">void</span>* arg)</span></span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;Shared::<span class="built_in">array</span>.size();++i)&#123;</span><br><span class="line">                <span class="built_in">std</span>::<span class="built_in">cout</span>&lt;&lt;<span class="string">"consume value: "</span>&lt;&lt;Shared::<span class="built_in">array</span>[i]&lt;&lt;<span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc,<span class="keyword">char</span>** argv)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(argc!=<span class="number">3</span>)&#123;</span><br><span class="line">                <span class="built_in">std</span>::<span class="built_in">cout</span>&lt;&lt;<span class="string">"arguments number error"</span>&lt;&lt;<span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">                <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> nmax=atoi(argv[<span class="number">1</span>]);</span><br><span class="line">        <span class="keyword">int</span> nthreads=atoi(argv[<span class="number">2</span>]);</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="built_in">vector</span>&lt;<span class="keyword">pthread_t</span>&gt; <span class="title">producer_tids</span><span class="params">(nthreads)</span></span>;</span><br><span class="line">        <span class="keyword">pthread_t</span> consumer_tid;</span><br><span class="line">        Shared::nmax=nmax;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;nthreads;++i)&#123;</span><br><span class="line">                <span class="keyword">if</span>(pthread_create(&amp;producer_tids[i],<span class="literal">nullptr</span>,producer,<span class="literal">nullptr</span>))&#123;</span><br><span class="line">                        <span class="built_in">std</span>::<span class="built_in">cout</span>&lt;&lt;<span class="string">"pthread_create error"</span>&lt;&lt;<span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">                        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">                &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;nthreads;++i)&#123;</span><br><span class="line">                <span class="keyword">if</span>(pthread_join(producer_tids[i],<span class="literal">nullptr</span>))&#123;</span><br><span class="line">                        <span class="built_in">std</span>::<span class="built_in">cout</span>&lt;&lt;<span class="string">"pthread_join error"</span>&lt;&lt;<span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">                        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="built_in">std</span>::<span class="built_in">cout</span>&lt;&lt;<span class="string">"thread "</span>&lt;&lt;i&lt;&lt;<span class="string">" Done!"</span>&lt;&lt;<span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(pthread_create(&amp;consumer_tid,<span class="literal">nullptr</span>,consumer,<span class="literal">nullptr</span>))&#123;</span><br><span class="line">                <span class="built_in">std</span>::<span class="built_in">cout</span>&lt;&lt;<span class="string">"pthread_create error"</span>&lt;&lt;<span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">                <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(pthread_join(consumer_tid,<span class="literal">nullptr</span>))&#123;</span><br><span class="line">                <span class="built_in">std</span>::<span class="built_in">cout</span>&lt;&lt;<span class="string">"pthread_join error"</span>&lt;&lt;<span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">                <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span>&lt;&lt;<span class="string">"Main Function Done!"</span>&lt;&lt;<span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/05/15/Mutex-In-Linux/" data-id="cka8b3ciw000fokv684wr3rsr" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Thread-In-Linux" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/05/15/Thread-In-Linux/" class="article-date">
@@ -688,84 +823,6 @@ int main(){
 
 
   
-    <article id="post-Insertion-Sort" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/15/Insertion-Sort/" class="article-date">
-  <time datetime="2020-05-15T04:13:11.000Z" itemprop="datePublished">2020-05-15</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/15/Insertion-Sort/">Insertion Sort</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Insertion  sort is an effective algorithm for a small amount of elements, the working pricinple of this algorithm like sort the playing cards. Supposing we hold cards in our left hands, and then we use the right hands to choose a  card to find the right location in the cards for every card. This processing we called insertion sort, the actually steps of insertion sort is as following:<br>(1) traversing each elements from 1 to n-1, suppose is j and set key=nums[j];<br>(2) traversing elements from [0,j] and finding the correct position of insertion, suppose is i;<br>(3) if nums[i]&lt;key, we should move nums[i] backward;</p>
-<h2 id="code"><a href="#code" class="headerlink" title="code"></a>code</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;iostream&gt;</span><br><span class="line">#include&lt;vector&gt;</span><br><span class="line">using namespace std;</span><br><span class="line">&#x2F;&#x2F;ascending</span><br><span class="line">void insert_sort(vector&lt;int&gt; &amp;nums)&#123;</span><br><span class="line">    int i,j,key;</span><br><span class="line">    for(j&#x3D;1;j&lt;nums.size();++j)&#123;</span><br><span class="line">        key&#x3D;nums[j];</span><br><span class="line">        i&#x3D;j-1;</span><br><span class="line">        while(i&gt;&#x3D;0 &amp;&amp; nums[i]&gt;key)&#123;</span><br><span class="line">            nums[i+1] &#x3D; nums[i];</span><br><span class="line">            --i;</span><br><span class="line">        &#125;</span><br><span class="line">        nums[i+1]&#x3D;key;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">&#x2F;&#x2F;descending</span><br><span class="line">void insert_sort2(vector&lt;int&gt; &amp;nums)&#123;</span><br><span class="line">    int i,j,key;</span><br><span class="line">    for(i&#x3D;1;i&lt;nums.size();++i)&#123;</span><br><span class="line">        key&#x3D;nums[i];</span><br><span class="line">        j&#x3D;i-1;</span><br><span class="line">        while(j&gt;&#x3D;0 &amp;&amp; nums[j]&lt;key)&#123;</span><br><span class="line">            nums[j+1] &#x3D; nums[j];</span><br><span class="line">            --j;</span><br><span class="line">        &#125;</span><br><span class="line">        nums[j+1]&#x3D;key;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main(int argc,char** argv)&#123;</span><br><span class="line">    vector&lt;int&gt; nums&#x3D;&#123;2,1,3,5,3,7,9,8&#125;;</span><br><span class="line">    insert_sort(nums);</span><br><span class="line">    insert_sort2(nums);</span><br><span class="line">    for(auto i:nums) cout&lt;&lt;i&lt;&lt;&quot; &quot;;</span><br><span class="line">    cout&lt;&lt;endl;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/15/Insertion-Sort/" data-id="cka7ot5g60003pkv62a9vbv43" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Introduce-To-Algorithm/" rel="tag">Introduce To Algorithm</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Selection-Sort" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/15/Selection-Sort/" class="article-date">
-  <time datetime="2020-05-15T04:12:26.000Z" itemprop="datePublished">2020-05-15</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/15/Selection-Sort/">Selection Sort</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Supposing we have a unordered array nums. Firstly, we swap the minmum element in nums to nums[0].Then, swaping to sub-minmum element in nums to nums[1] …, the rest can do the same manner, until we find the last elemnts. This algorithm is so-called selection sort, because for each time we choose the minimum element in the rest array, and swap it to the front element.</p>
-<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;iostream&gt;</span><br><span class="line">#include&lt;vector&gt;</span><br><span class="line">using namespace std;</span><br><span class="line">void choose_sort(vector&lt;int&gt; &amp;nums)&#123;</span><br><span class="line">    int min_&#x3D;0,idx&#x3D;0;</span><br><span class="line">    for(int i&#x3D;0;i&lt;nums.size()-1;++i)&#123;</span><br><span class="line">        min_&#x3D;nums[i];idx&#x3D;i;</span><br><span class="line">        for(int j&#x3D;i+1;j&lt;nums.size();++j)&#123;</span><br><span class="line">            if(min_&gt;nums[j])&#123;</span><br><span class="line">                min_&#x3D;nums[j];</span><br><span class="line">                idx&#x3D;j;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        nums[idx]&#x3D;nums[i];</span><br><span class="line">        nums[i]&#x3D;min_;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main()&#123;</span><br><span class="line">    vector&lt;int&gt; nums&#x3D;&#123;3,1,2,4,6,7,9,8&#125;;</span><br><span class="line">    choose_sort(nums);</span><br><span class="line">    for(auto i:nums) cout&lt;&lt;i&lt;&lt;&quot; &quot;;</span><br><span class="line">    cout&lt;&lt;endl;</span><br><span class="line">    exit(0);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/15/Selection-Sort/" data-id="cka7ot5g80005pkv6dwp638nd" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Introduce-To-Algorithm/" rel="tag">Introduce To Algorithm</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -816,6 +873,14 @@ int main(){
       <ul>
         
           <li>
+            <a href="/2020/05/24/Heap-Sort/">Heap-Sort</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/24/Heap-Sort/">Heap Sort</a>
+          </li>
+        
+          <li>
             <a href="/2020/05/15/What-Compile-Do-When-An-Empty-Class-Is-Declared/">What Compile Do When An Empty Class Is Declared</a>
           </li>
         
@@ -825,14 +890,6 @@ int main(){
         
           <li>
             <a href="/2020/05/15/bind-And-function-In-C/">bind And function In C++</a>
-          </li>
-        
-          <li>
-            <a href="/2020/05/15/Variable-Arguments-In-C/">Variable Arguments In C++</a>
-          </li>
-        
-          <li>
-            <a href="/2020/05/15/Install-Boost-In-Linux/">Install Boost In Linux</a>
           </li>
         
       </ul>

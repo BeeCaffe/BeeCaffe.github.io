@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Heap Sort | BeeCaffe&#39;s Personal Blogs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Actually, Heap is an array which is a complete binary tree in logical, excepting for the lowest layer all the layers are full binary tree. There are two types of heap, they are top heap and bottom hea">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Heap Sort">
+<meta property="og:url" content="http://yoursite.com/2020/05/24/Heap-Sort/index.html">
+<meta property="og:site_name" content="BeeCaffe&#39;s Personal Blogs">
+<meta property="og:description" content="Actually, Heap is an array which is a complete binary tree in logical, excepting for the lowest layer all the layers are full binary tree. There are two types of heap, they are top heap and bottom hea">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-05-24T02:39:55.000Z">
+<meta property="article:modified_time" content="2020-05-25T03:02:21.892Z">
+<meta property="article:author" content="BeeCaffe">
+<meta property="article:tag" content="Introduce To Algorithm">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="BeeCaffe&#39;s Personal Blogs" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">BeeCaffe&#39;s Personal Blogs</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Heap-Sort" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/24/Heap-Sort/" class="article-date">
+  <time datetime="2020-05-24T02:39:55.000Z" itemprop="datePublished">2020-05-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Heap Sort
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Actually, Heap is an array which is a complete binary tree in logical, excepting for the lowest layer all the layers are full binary tree. There are two types of heap, they are top heap and bottom heap. In heap sort algorithm we utilize top heap, and bottom heap is used to construct priority queue in gennerally. </p>
+<p>Suppose heap node i, it parent is i-1/2, we can define top heap and bottom heap as follows: </p>
+<ul>
+<li><strong>Top Heap</strong>: heap[(i-1)/2]&gt;=heap[i]</li>
+<li><strong>Bottom Heap</strong>: heap[(i-1)/2]&lt;=heap[i]</li>
+</ul>
+<h2 id="Adjust-Heap"><a href="#Adjust-Heap" class="headerlink" title="Adjust Heap"></a>Adjust Heap</h2><p>This place I use top heap as an example, top heap must satisify the priciple of heap[(i-1)/2]&gt;=heap[i]. Therefore, we must make sure all the elements in heap satisfiy this relu.<br>We know that, the child of node i are 2<em>i+1 and 2</em>i+2, that is:</p>
+<ul>
+<li><strong>Left Child</strong>: 2*i+1</li>
+<li><strong>Right Child</strong>: 2*i+2<br>We must make sure every elements in heap satisfy the font relue. Therefore, if heap[i]&lt;heap[left_child] or heap[i]&lt;heap[right_child], we should swap heap[i] with min(heap[left_child],heap[right_child]). Then, taking this operation recurrently. The code of adjust heap is as following:</li>
+<li><strong>code</strong>:  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">adjustHeap</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;heap,<span class="keyword">int</span> i,<span class="keyword">int</span> n)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(i&gt;n) <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">int</span> left=<span class="number">2</span>*i+<span class="number">1</span>,right=<span class="number">2</span>*i+<span class="number">2</span>;</span><br><span class="line">    <span class="keyword">int</span> minNum=heap[i],minIdx=i;</span><br><span class="line">    <span class="keyword">if</span>(left&lt;n &amp;&amp; minNum&gt;heap[left])&#123;</span><br><span class="line">        minNum=heap[left];</span><br><span class="line">        minIdx=left;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(right&lt;n &amp;&amp; minNum&gt;heap[right])&#123;</span><br><span class="line">        minNum=heap[right];</span><br><span class="line">        minIdx=right;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(minIdx!=i)&#123;</span><br><span class="line">        <span class="keyword">int</span> tmp=heap[i];</span><br><span class="line">        heap[i]=minNum;</span><br><span class="line">        heap[minIdx]=tmp;</span><br><span class="line">        adjustHeap(heap,minIdx,n);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+generally, for a heap the time complexity of adjusting a heap is O(logn).</li>
+</ul>
+<h2 id="Bild-Heap"><a href="#Bild-Heap" class="headerlink" title="Bild Heap"></a>Bild Heap</h2><p>A heap can be bulit by a bottom-up process, where is to tranfer a normal array with length n to a heap. </p>
+<p>Why we choose bottom-up process rather than top-down process to build a heap?</p>
+<p>If we choose top-down process to build a heap, the strat point must be the root node. When strarting to adjust the heap form root, the sub-tree of root are not satisty the heap rules, so, the build heap process may meet some problem. By constrast, if we choose bottom-up process to build a heap, before adjusting the top node, their children has already been adjusted. Therefore, the code of build heap is:</p>
+<ul>
+<li><strong>code</strong>:  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">buildHeap</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;heap)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n=heap.size();</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=n/<span class="number">2</span><span class="number">-1</span>;i&gt;=<span class="number">0</span>;--i) adjustHeap(heap,i,n);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+The time complexity of build heap is O(n), more detail about the time complexity please refer to book.<h2 id="Heap-Sort"><a href="#Heap-Sort" class="headerlink" title="Heap Sort"></a>Heap Sort</h2>As a result for the root is alway the maximum elements in the heap. Thus, for each time, we can get the maximum value, and swap it with the last value in the heap. Then, adjusting the heap again to get the next maximum value. After n steps, all the elements in the heap is ordered. The code is:</li>
+<li><p><strong>code</strong>:</p>
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">swap</span><span class="params">(<span class="keyword">int</span> &amp;a,<span class="keyword">int</span> &amp;b)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> tmp=a;</span><br><span class="line">    a=b;</span><br><span class="line">    b=tmp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">heapSort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;nums)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n=nums.size();</span><br><span class="line">    buildHeap(nums);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=n<span class="number">-1</span>;i&gt;=<span class="number">0</span>;++i)&#123;</span><br><span class="line">        swap(heap[<span class="number">0</span>],heap[i]);</span><br><span class="line">        adjustHeap(heap,<span class="number">0</span>,i);        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><p>The complete code of heap sort is as following:</p>
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">adjustHeap</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;heap,<span class="keyword">int</span> i,<span class="keyword">int</span> n)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(i&gt;n) <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">int</span> left=<span class="number">2</span>*i+<span class="number">1</span>,right=<span class="number">2</span>*i+<span class="number">2</span>;</span><br><span class="line">    <span class="keyword">int</span> minNum=heap[i],minIdx=i;</span><br><span class="line">    <span class="keyword">if</span>(left&lt;n &amp;&amp; minNum&gt;heap[left])&#123;</span><br><span class="line">        minNum=heap[left];</span><br><span class="line">        minIdx=left;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(right&lt;n &amp;&amp; minNum&gt;heap[right])&#123;</span><br><span class="line">        minNum=heap[right];</span><br><span class="line">        minIdx=right;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(minIdx!=i)&#123;</span><br><span class="line">        <span class="keyword">int</span> tmp=heap[i];</span><br><span class="line">        heap[i]=minNum;</span><br><span class="line">        heap[minIdx]=tmp;</span><br><span class="line">        adjustHeap(heap,minIdx,n);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">buildHeap</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;heap)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n=heap.size();</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=n/<span class="number">2</span><span class="number">-1</span>;i&gt;=<span class="number">0</span>;--i) adjustHeap(heap,i,n);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">swap</span><span class="params">(<span class="keyword">int</span> &amp;a,<span class="keyword">int</span> &amp;b)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> tmp=a;</span><br><span class="line">    a=b;</span><br><span class="line">    b=tmp;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">heapSort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;nums)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n=nums.size();</span><br><span class="line">    buildHeap(nums);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=n<span class="number">-1</span>;i&gt;=<span class="number">0</span>;++i)&#123;</span><br><span class="line">        swap(heap[<span class="number">0</span>],heap[i]);</span><br><span class="line">        adjustHeap(heap,<span class="number">0</span>,i);        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; nums=&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">9</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">3</span>&#125;;</span><br><span class="line">    heapSort(nums);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/05/24/Heap-Sort/" data-id="ckalwogiy000000v60dg987me" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Introduce-To-Algorithm/" rel="tag">Introduce To Algorithm</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/05/24/Heap-Sort/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Heap-Sort
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/05/15/What-Compile-Do-When-An-Empty-Class-Is-Declared/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">What Compile Do When An Empty Class Is Declared</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Data-Structure/" rel="tag">Data Structure</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Introduce-To-Algorithm/" rel="tag">Introduce To Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/network/" rel="tag">network</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C/" style="font-size: 13.33px;">C++</a> <a href="/tags/Data-Structure/" style="font-size: 13.33px;">Data Structure</a> <a href="/tags/Introduce-To-Algorithm/" style="font-size: 16.67px;">Introduce To Algorithm</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/network/" style="font-size: 10px;">network</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/05/24/Heap-Sort/">Heap-Sort</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/24/Heap-Sort/">Heap Sort</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/15/What-Compile-Do-When-An-Empty-Class-Is-Declared/">What Compile Do When An Empty Class Is Declared</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/15/Throw-Exception-In-Constructor-And-Destructor/">Throw Exception In Constructor And Destructor</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/15/bind-And-function-In-C/">bind And function In C++</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 BeeCaffe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

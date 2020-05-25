@@ -64,6 +64,84 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Insertion-Sort" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/15/Insertion-Sort/" class="article-date">
+  <time datetime="2020-05-15T04:13:11.000Z" itemprop="datePublished">2020-05-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/15/Insertion-Sort/">Insertion Sort</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Insertion  sort is an effective algorithm for a small amount of elements, the working pricinple of this algorithm like sort the playing cards. Supposing we hold cards in our left hands, and then we use the right hands to choose a  card to find the right location in the cards for every card. This processing we called insertion sort, the actually steps of insertion sort is as following:<br>(1) traversing each elements from 1 to n-1, suppose is j and set key=nums[j];<br>(2) traversing elements from [0,j] and finding the correct position of insertion, suppose is i;<br>(3) if nums[i]&lt;key, we should move nums[i] backward;</p>
+<h2 id="code"><a href="#code" class="headerlink" title="code"></a>code</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;iostream&gt;</span><br><span class="line">#include&lt;vector&gt;</span><br><span class="line">using namespace std;</span><br><span class="line">&#x2F;&#x2F;ascending</span><br><span class="line">void insert_sort(vector&lt;int&gt; &amp;nums)&#123;</span><br><span class="line">    int i,j,key;</span><br><span class="line">    for(j&#x3D;1;j&lt;nums.size();++j)&#123;</span><br><span class="line">        key&#x3D;nums[j];</span><br><span class="line">        i&#x3D;j-1;</span><br><span class="line">        while(i&gt;&#x3D;0 &amp;&amp; nums[i]&gt;key)&#123;</span><br><span class="line">            nums[i+1] &#x3D; nums[i];</span><br><span class="line">            --i;</span><br><span class="line">        &#125;</span><br><span class="line">        nums[i+1]&#x3D;key;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">&#x2F;&#x2F;descending</span><br><span class="line">void insert_sort2(vector&lt;int&gt; &amp;nums)&#123;</span><br><span class="line">    int i,j,key;</span><br><span class="line">    for(i&#x3D;1;i&lt;nums.size();++i)&#123;</span><br><span class="line">        key&#x3D;nums[i];</span><br><span class="line">        j&#x3D;i-1;</span><br><span class="line">        while(j&gt;&#x3D;0 &amp;&amp; nums[j]&lt;key)&#123;</span><br><span class="line">            nums[j+1] &#x3D; nums[j];</span><br><span class="line">            --j;</span><br><span class="line">        &#125;</span><br><span class="line">        nums[j+1]&#x3D;key;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main(int argc,char** argv)&#123;</span><br><span class="line">    vector&lt;int&gt; nums&#x3D;&#123;2,1,3,5,3,7,9,8&#125;;</span><br><span class="line">    insert_sort(nums);</span><br><span class="line">    insert_sort2(nums);</span><br><span class="line">    for(auto i:nums) cout&lt;&lt;i&lt;&lt;&quot; &quot;;</span><br><span class="line">    cout&lt;&lt;endl;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/05/15/Insertion-Sort/" data-id="cka7ot5g60003pkv62a9vbv43" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Introduce-To-Algorithm/" rel="tag">Introduce To Algorithm</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Selection-Sort" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/15/Selection-Sort/" class="article-date">
+  <time datetime="2020-05-15T04:12:26.000Z" itemprop="datePublished">2020-05-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/15/Selection-Sort/">Selection Sort</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Supposing we have a unordered array nums. Firstly, we swap the minmum element in nums to nums[0].Then, swaping to sub-minmum element in nums to nums[1] …, the rest can do the same manner, until we find the last elemnts. This algorithm is so-called selection sort, because for each time we choose the minimum element in the rest array, and swap it to the front element.</p>
+<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;iostream&gt;</span><br><span class="line">#include&lt;vector&gt;</span><br><span class="line">using namespace std;</span><br><span class="line">void choose_sort(vector&lt;int&gt; &amp;nums)&#123;</span><br><span class="line">    int min_&#x3D;0,idx&#x3D;0;</span><br><span class="line">    for(int i&#x3D;0;i&lt;nums.size()-1;++i)&#123;</span><br><span class="line">        min_&#x3D;nums[i];idx&#x3D;i;</span><br><span class="line">        for(int j&#x3D;i+1;j&lt;nums.size();++j)&#123;</span><br><span class="line">            if(min_&gt;nums[j])&#123;</span><br><span class="line">                min_&#x3D;nums[j];</span><br><span class="line">                idx&#x3D;j;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        nums[idx]&#x3D;nums[i];</span><br><span class="line">        nums[i]&#x3D;min_;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main()&#123;</span><br><span class="line">    vector&lt;int&gt; nums&#x3D;&#123;3,1,2,4,6,7,9,8&#125;;</span><br><span class="line">    choose_sort(nums);</span><br><span class="line">    for(auto i:nums) cout&lt;&lt;i&lt;&lt;&quot; &quot;;</span><br><span class="line">    cout&lt;&lt;endl;</span><br><span class="line">    exit(0);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/05/15/Selection-Sort/" data-id="cka7ot5g80005pkv6dwp638nd" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Introduce-To-Algorithm/" rel="tag">Introduce To Algorithm</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Merge-Sort" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/05/15/Merge-Sort/" class="article-date">
@@ -361,6 +439,14 @@
       <ul>
         
           <li>
+            <a href="/2020/05/24/Heap-Sort/">Heap-Sort</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/24/Heap-Sort/">Heap Sort</a>
+          </li>
+        
+          <li>
             <a href="/2020/05/15/What-Compile-Do-When-An-Empty-Class-Is-Declared/">What Compile Do When An Empty Class Is Declared</a>
           </li>
         
@@ -370,14 +456,6 @@
         
           <li>
             <a href="/2020/05/15/bind-And-function-In-C/">bind And function In C++</a>
-          </li>
-        
-          <li>
-            <a href="/2020/05/15/Variable-Arguments-In-C/">Variable Arguments In C++</a>
-          </li>
-        
-          <li>
-            <a href="/2020/05/15/Install-Boost-In-Linux/">Install Boost In Linux</a>
           </li>
         
       </ul>
