@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Quick Sort | BeeCaffe&#39;s Personal Blogs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1. Quick SortFor each time, we ensure one numbers location in the whole array, which we called key value, then, we put the numbers which smaller than key value into the left of it, and the bigger numb">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Quick Sort">
+<meta property="og:url" content="http://yoursite.com/2020/05/26/Quick-Sort/index.html">
+<meta property="og:site_name" content="BeeCaffe&#39;s Personal Blogs">
+<meta property="og:description" content="1. Quick SortFor each time, we ensure one numbers location in the whole array, which we called key value, then, we put the numbers which smaller than key value into the left of it, and the bigger numb">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/13348038-4b3fb69926be987e.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="article:published_time" content="2020-05-26T02:55:42.000Z">
+<meta property="article:modified_time" content="2020-05-26T02:57:24.717Z">
+<meta property="article:author" content="BeeCaffe">
+<meta property="article:tag" content="Introduce To Algorithm">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/13348038-4b3fb69926be987e.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+  
+    <link rel="alternate" href="/atom.xml" title="BeeCaffe&#39;s Personal Blogs" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">BeeCaffe&#39;s Personal Blogs</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Quick-Sort" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/26/Quick-Sort/" class="article-date">
+  <time datetime="2020-05-26T02:55:42.000Z" itemprop="datePublished">2020-05-26</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Quick Sort
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="1-Quick-Sort"><a href="#1-Quick-Sort" class="headerlink" title="1. Quick Sort"></a>1. Quick Sort</h3><p>For each time, we ensure one numbers location in the whole array, which we called <strong>key value</strong>, then, we put the numbers which smaller than key value into the left of it, and the bigger number to the right of key value.</p>
+<p>After that, we recurrently ensure the left numbers order and the right numbers order until the whole array are sorted.The following picture shows a simple example of quickly sort.</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/13348038-4b3fb69926be987e.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="quick_sort.jpg"></p>
+<p>At the start of this program, <strong>low=0</strong> and <strong>high=5</strong>, we choose the first number of the range of [low,high], and use a variable <strong>key=arr[low]=7</strong> to record this number. Then we find that arr[high]=2 &lt; 7, which means we must change the high index number to key value left. As a result for we have recorded the arr[low] in<strong> key</strong>, we set arr[low]=arr[high].</p>
+<p>Then, we need to find the first bigger than key number in the left of the key. As we can see 8 is bigger than 7, so we stop and set arr[high]=arr[low].</p>
+<p>In a word, we try to find the number smaller than key in the right and swap it into the left, by contrast, we search the value bigger than key in the left and swap it into right, until high==low, we set arr[high]=arr[low]=key. Then we do the same thing in the left subrange and right subrange.</p>
+<p>The source code of this algorithm is shown in following.</p>
+<h3 id="2-Code"><a href="#2-Code" class="headerlink" title="2. Code"></a>2. Code</h3><pre><code class="cpp"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span>
+<span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;
+<span class="function"><span class="keyword">int</span> <span class="title">get_index</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; nums,<span class="keyword">int</span> low,<span class="keyword">int</span> high)</span></span>{
+    <span class="keyword">int</span> key=nums[low];
+    <span class="comment">//when low==high, loop is over</span>
+    <span class="keyword">while</span>(low&lt;high){
+        <span class="comment">//we must find the first number of smaller than key in the right of the key</span>
+        <span class="keyword">while</span>(low&lt;high&amp;&amp;nums[high]&gt;=key) --high;
+        nums[low]=nums[high];
+        <span class="comment">//we must find the first number of bigger than key in the left</span>
+        <span class="keyword">while</span>(low&lt;high&amp;&amp;nums[low]&lt;=key) ++low;
+        nums[high]=nums[low];
+    }
+    <span class="comment">//there is key place</span>
+    nums[low]=key;
+    <span class="keyword">return</span> low;
+}
+
+<span class="function"><span class="keyword">void</span> <span class="title">quick_sort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;nums,<span class="keyword">int</span> low,<span class="keyword">int</span> high)</span></span>{
+    <span class="keyword">if</span>(low&lt;high){
+        <span class="keyword">int</span> index=get_index(nums,low,high);
+        quick_sort(nums,low,index<span class="number">-1</span>);
+        quick_sort(nums,index+<span class="number">1</span>,high);
+    }
+}
+<span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>{
+    <span class="keyword">int</span> n;
+    <span class="built_in">cin</span>&gt;&gt;n;
+    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; nums;
+    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;++i){
+        <span class="keyword">int</span> val;
+        <span class="built_in">cin</span>&gt;&gt;val;
+        nums.push_back(val);
+    }
+    quick_sort(nums,<span class="number">0</span>,nums.size()<span class="number">-1</span>);
+    <span class="keyword">for</span>(<span class="keyword">auto</span> i:nums) <span class="built_in">cout</span>&lt;&lt;i&lt;&lt;<span class="string">" "</span>;
+    <span class="built_in">cout</span>&lt;&lt;<span class="built_in">endl</span>;
+    <span class="keyword">return</span> <span class="number">0</span>;
+}
+</code></pre>
+<h3 id="3-Complexity"><a href="#3-Complexity" class="headerlink" title="3. Complexity"></a>3. Complexity</h3><p><strong>Time complexity</strong>:For each time we must change value n times, and the stack deep is logn, so the time complexity is <strong>O**</strong>(nlogn)**. In the worst situation, the stack deepth changed into n, the time complexity would be O(n2).</p>
+<p><strong>Space Complexity</strong>: O(1)</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/05/26/Quick-Sort/" data-id="ckanbx9s30000tov64v3i5xcq" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Introduce-To-Algorithm/" rel="tag">Introduce To Algorithm</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/05/24/Heap-Sort/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Heap-Sort</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Data-Structure/" rel="tag">Data Structure</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Introduce-To-Algorithm/" rel="tag">Introduce To Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/network/" rel="tag">network</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C/" style="font-size: 13.33px;">C++</a> <a href="/tags/Data-Structure/" style="font-size: 13.33px;">Data Structure</a> <a href="/tags/Introduce-To-Algorithm/" style="font-size: 16.67px;">Introduce To Algorithm</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/network/" style="font-size: 10px;">network</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/05/26/Quick-Sort/">Quick Sort</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/24/Heap-Sort/">Heap-Sort</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/24/Heap-Sort/">Heap Sort</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/15/What-Compile-Do-When-An-Empty-Class-Is-Declared/">What Compile Do When An Empty Class Is Declared</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/15/Throw-Exception-In-Constructor-And-Destructor/">Throw Exception In Constructor And Destructor</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 BeeCaffe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

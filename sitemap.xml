@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2020/05/26/Quick-Sort/</loc>
+    
+    <lastmod>2020-05-26T02:57:24.717Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2020/05/24/Heap-Sort/</loc>
     
     <lastmod>2020-05-25T03:02:21.892Z</lastmod>
