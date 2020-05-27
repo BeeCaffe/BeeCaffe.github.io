@@ -7,15 +7,21 @@
   
   <title>进程间通信IPC | BeeCaffe&#39;s Personal Blogs</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="article">
+  <meta name="description" content="进程间通讯方式以及优点缺点 进程间通信方式包括：信号，信号量，管道，共享内存，消息队列，套接口。  管道（piepe） 有名管道：一种半双工的进程间通讯方式，允许无亲缘关系的进程间通讯。 优点：可以实现任意关系进程间的通信 缺点：a. 长期存在于系统中，使用不当易出错               b. 缓冲区有限1234&#x2F;&#x2F;有名管道int mkfifo(const char *filename,">
+<meta property="og:type" content="article">
 <meta property="og:title" content="进程间通信IPC">
 <meta property="og:url" content="http://yoursite.com/2020/05/27/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1IPC/index.html">
 <meta property="og:site_name" content="BeeCaffe&#39;s Personal Blogs">
+<meta property="og:description" content="进程间通讯方式以及优点缺点 进程间通信方式包括：信号，信号量，管道，共享内存，消息队列，套接口。  管道（piepe） 有名管道：一种半双工的进程间通讯方式，允许无亲缘关系的进程间通讯。 优点：可以实现任意关系进程间的通信 缺点：a. 长期存在于系统中，使用不当易出错               b. 缓冲区有限1234&#x2F;&#x2F;有名管道int mkfifo(const char *filename,">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://yoursite.com/images/2.png">
+<meta property="og:image" content="http://yoursite.com/images/3.png">
 <meta property="article:published_time" content="2020-05-27T06:47:44.000Z">
-<meta property="article:modified_time" content="2020-05-27T06:47:44.868Z">
+<meta property="article:modified_time" content="2020-05-27T06:59:40.581Z">
 <meta property="article:author" content="BeeCaffe">
+<meta property="article:tag" content="面试">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/images/2.png">
   
     <link rel="alternate" href="/atom.xml" title="BeeCaffe&#39;s Personal Blogs" type="application/atom+xml">
   
@@ -86,13 +92,72 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <h3 id="进程间通讯方式以及优点缺点"><a href="#进程间通讯方式以及优点缺点" class="headerlink" title="进程间通讯方式以及优点缺点"></a>进程间通讯方式以及优点缺点</h3><hr>
+<p>进程间通信方式包括：信号，信号量，管道，共享内存，消息队列，套接口。</p>
+<ul>
+<li><strong>管道（piepe）</strong><ul>
+<li>有名管道：一种半双工的进程间通讯方式，允许无亲缘关系的进程间通讯。<ul>
+<li>优点：可以实现任意关系进程间的通信</li>
+<li>缺点：a. 长期存在于系统中，使用不当易出错               b. 缓冲区有限<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//有名管道</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">mkfifo</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *filename, <span class="keyword">mode_t</span> mode)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">mknode</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *filename, <span class="keyword">mode_t</span> mode | S_IFIFO, (<span class="keyword">dev_t</span>) <span class="number">0</span> )</span></span>;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li>无名管道：一种半双工的进程间通讯方式，只允许有亲缘关系的进程间进行通讯（父子进程）<ul>
+<li>优点：简单方便</li>
+<li>缺点：a. 局限于单向通讯 b. 只适用于有亲缘关系的父子进程 c. 缓冲区有限<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="comment">//无名管道</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">pipe</span><span class="params">(<span class="keyword">int</span> filedes[<span class="number">2</span>])</span></span>;</span><br></pre></td></tr></table></figure>
+<img src="/images/2.png" alt="image"></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>信号量（semaphore）</strong>：一个计数器，可以控制多个线程对共享资源的访问。</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;举例</span><br><span class="line">一个房间里面有多个妹子，可以多个嫖客同时进入。当房间人数达到上限时，嫖客将自己名字登记在门前列表上，并开始打盹。当房间里面有人出来的时候，负责唤醒打盹的嫖客</span><br></pre></td></tr></table></figure>
+<ul>
+<li>优点： 可以同步进程</li>
+<li>缺点： 信号量有限</li>
+</ul>
+</li>
+<li><strong>信号（signal）</strong>：信号是 Linux 进程间通信的最古老的方式。信号是软件中断，它是在软件层次上对中断机制的一种模拟，是一种异步通信的方式   。信号可以导致一个正在运行的进程被另一个正在运行的异步进程中断，转而处理某一个突发事件。  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;中断举例</span><br><span class="line">“ 中断 ” 在我们生活中经常遇到，譬如，我正在房间里打游戏，突然送快递的来了，把正在玩游戏的我给 “ 中断 ” 了，我去签收快递 ( 处理中断 ) ，处理完成后，再继续玩我的游戏。这里我们学习的 “ 信号 ” 就是属于这么一种 “ 中断 ” 。我们在终端上敲 “Ctrl+c” ，就产生一个 “ 中断 ” ，相当于产生一个信号，接着就会处理这么一个 “ 中断任务 ” （默认的处理方式为中断当前进程）。</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>信号本质</strong> 信号的本质是操作系统给进程发送信号，即向进程的PCB（Process Control Block）中写入数据，修改相应的PCB字段，进程在合适的时间去处理所接受到的信号。使用信号的目的大致分为两点：a. 让进程知道已经发生某个特定事件 b. 强迫代码执行其代码中的信号处理程序。</li>
+<li><strong>信号分类</strong><ul>
+<li>用户终端输入：Ctrl+c，Ctrl+\，Ctrl+z</li>
+<li>硬件异常：进程访问非法内存，除以0</li>
+<li>kill（）函数发送信号</li>
+</ul>
+</li>
+<li><strong>信号处理方式</strong><ul>
+<li>执行系统默认： 终止该进程</li>
+<li>忽略信号：没有任何动作</li>
+<li>执行自定义函数</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>消息队列</strong>：是位于内核的消息链表，每个节点都是一个消息，每一个消息都有自己的类型，由消息队列标识符标识，每种类型的消息都被对应链表维护。<br><img src="/images/3.png" alt="image"></p>
+<ul>
+<li>图中 1，2，3，4 代表消息类型，彩色方块代表消息。0维护整个消息队列，记录每个消息加入队列的事件。</li>
+</ul>
+<ul>
+<li><strong>优点</strong>：可以实现任意进程间的通信，并通过系统调用函数来实现消息发送和接收之间的同步，无需考虑同步问题，方便</li>
+<li><strong>缺点</strong>： 信息的复制需要额外消耗 CPU 的时间，不适宜于信息量大或操作频繁的场合</li>
+</ul>
+</li>
+<li><p><strong>共享内存</strong>：映射一段能被其他进程所访问的内存，这段共享内存由一个进程创建，但多个进程都可以访问</p>
+<ul>
+<li>优点：无须复制，快捷，信息量大</li>
+<li>缺点：a. 通信是通过将共享空间缓冲区直接附加到进程的虚拟地址空间中来实现的，因此进程间的读写操作的同步问题 b. 利用内存缓冲区直接交换信息，内存的实体存在于计算机中，只能同一个计算机系统中的诸多进程共享，不方便网络通信</li>
+</ul>
+</li>
+</ul>
+
       
     </div>
     <footer class="article-footer">
       <a data-url="http://yoursite.com/2020/05/27/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1IPC/" data-id="ckaozyvh80000c0v6dk1ic5mq" class="article-share-link">Share</a>
       
       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag">面试</a></li></ul>
+
     </footer>
   </div>
   
@@ -121,7 +186,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Data-Structure/" rel="tag">Data Structure</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Introduce-To-Algorithm/" rel="tag">Introduce To Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/network/" rel="tag">network</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Data-Structure/" rel="tag">Data Structure</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Introduce-To-Algorithm/" rel="tag">Introduce To Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/network/" rel="tag">network</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag">面试</a></li></ul>
     </div>
   </div>
 
@@ -131,7 +196,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/C/" style="font-size: 13.33px;">C++</a> <a href="/tags/Data-Structure/" style="font-size: 13.33px;">Data Structure</a> <a href="/tags/Introduce-To-Algorithm/" style="font-size: 16.67px;">Introduce To Algorithm</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/network/" style="font-size: 10px;">network</a>
+      <a href="/tags/C/" style="font-size: 13.33px;">C++</a> <a href="/tags/Data-Structure/" style="font-size: 13.33px;">Data Structure</a> <a href="/tags/Introduce-To-Algorithm/" style="font-size: 16.67px;">Introduce To Algorithm</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/network/" style="font-size: 10px;">network</a> <a href="/tags/%E9%9D%A2%E8%AF%95/" style="font-size: 10px;">面试</a>
     </div>
   </div>
 
