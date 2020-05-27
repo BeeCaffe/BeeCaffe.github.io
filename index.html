@@ -92,26 +92,29 @@
 <li><strong>管道（piepe）</strong><ul>
 <li>有名管道：一种半双工的进程间通讯方式，允许无亲缘关系的进程间通讯。<ul>
 <li>优点：可以实现任意关系进程间的通信</li>
-<li>缺点：a. 长期存在于系统中，使用不当易出错               b. 缓冲区有限<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//有名管道</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">mkfifo</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *filename, <span class="keyword">mode_t</span> mode)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">mknode</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *filename, <span class="keyword">mode_t</span> mode | S_IFIFO, (<span class="keyword">dev_t</span>) <span class="number">0</span> )</span></span>;</span><br></pre></td></tr></table></figure></li>
+<li>缺点：a. 长期存在于系统中，使用不当易出错               b. 缓冲区有限</li>
 </ul>
 </li>
 <li>无名管道：一种半双工的进程间通讯方式，只允许有亲缘关系的进程间进行通讯（父子进程）<ul>
 <li>优点：简单方便</li>
-<li>缺点：a. 局限于单向通讯 b. 只适用于有亲缘关系的父子进程 c. 缓冲区有限<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="comment">//无名管道</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">pipe</span><span class="params">(<span class="keyword">int</span> filedes[<span class="number">2</span>])</span></span>;</span><br></pre></td></tr></table></figure>
-<img src="/images/2.png" alt="image"></li>
+<li>缺点：a. 局限于单向通讯 b. 只适用于有亲缘关系的父子进程 c. 缓冲区有限</li>
 </ul>
 </li>
 </ul>
 </li>
-<li><p><strong>信号量（semaphore）</strong>：一个计数器，可以控制多个线程对共享资源的访问。</p>
-  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;举例</span><br><span class="line">一个房间里面有多个妹子，可以多个嫖客同时进入。当房间人数达到上限时，嫖客将自己名字登记在门前列表上，并开始打盹。当房间里面有人出来的时候，负责唤醒打盹的嫖客</span><br></pre></td></tr></table></figure>
+</ul>
+<p><img src="/images/2.png" alt="image"></p>
 <ul>
+<li><p><strong>信号量（semaphore）</strong>：一个计数器，可以控制多个线程对共享资源的访问。</p>
+<ul>
+<li>举例：一个房间里面有多个妹子，可以多个嫖客同时进入。当房间人数达到上限时，嫖客将自己名字登记在门前列表上，并开始打盹。当房间里面有人出来的时候，负责唤醒打盹的嫖客</li>
 <li>优点： 可以同步进程</li>
 <li>缺点： 信号量有限</li>
 </ul>
 </li>
-<li><strong>信号（signal）</strong>：信号是 Linux 进程间通信的最古老的方式。信号是软件中断，它是在软件层次上对中断机制的一种模拟，是一种异步通信的方式   。信号可以导致一个正在运行的进程被另一个正在运行的异步进程中断，转而处理某一个突发事件。  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;中断举例</span><br><span class="line">“ 中断 ” 在我们生活中经常遇到，譬如，我正在房间里打游戏，突然送快递的来了，把正在玩游戏的我给 “ 中断 ” 了，我去签收快递 ( 处理中断 ) ，处理完成后，再继续玩我的游戏。这里我们学习的 “ 信号 ” 就是属于这么一种 “ 中断 ” 。我们在终端上敲 “Ctrl+c” ，就产生一个 “ 中断 ” ，相当于产生一个信号，接着就会处理这么一个 “ 中断任务 ” （默认的处理方式为中断当前进程）。</span><br></pre></td></tr></table></figure>
+<li><p><strong>信号（signal）</strong>：信号是 Linux 进程间通信的最古老的方式。信号是软件中断，它是在软件层次上对中断机制的一种模拟，是一种异步通信的方式   。信号可以导致一个正在运行的进程被另一个正在运行的异步进程中断，转而处理某一个突发事件。</p>
 <ul>
+<li>举例：“ 中断 ” 在我们生活中经常遇到，譬如，我正在房间里打游戏，突然送快递的来了，把正在玩游戏的我给 “ 中断 ” 了，我去签收快递 ( 处理中断 ) ，处理完成后，再继续玩我的游戏。这里我们学习的 “ 信号 ” 就是属于这么一种 “ 中断 ” 。我们在终端上敲 “Ctrl+c” ，就产生一个 “ 中断 ” ，相当于产生一个信号，接着就会处理这么一个 “ 中断任务 ” （默认的处理方式为中断当前进程）。</li>
 <li><strong>信号本质</strong> 信号的本质是操作系统给进程发送信号，即向进程的PCB（Process Control Block）中写入数据，修改相应的PCB字段，进程在合适的时间去处理所接受到的信号。使用信号的目的大致分为两点：a. 让进程知道已经发生某个特定事件 b. 强迫代码执行其代码中的信号处理程序。</li>
 <li><strong>信号分类</strong><ul>
 <li>用户终端输入：Ctrl+c，Ctrl+\，Ctrl+z</li>
