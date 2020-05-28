@@ -64,6 +64,163 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-TCP-Three-Way-Handshake" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/15/TCP-Three-Way-Handshake/" class="article-date">
+  <time datetime="2020-05-15T14:31:35.000Z" itemprop="datePublished">2020-05-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/15/TCP-Three-Way-Handshake/">TCP Three Way Handshake</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-TCP-Header-Format"><a href="#1-TCP-Header-Format" class="headerlink" title="1. TCP Header Format"></a>1. TCP Header Format</h2><p>As is shown in the following picture, the TCP header has 20 Bytes in total.</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/13348038-e096bec9fa7edcef.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<ul>
+<li><p><strong>Port Number</strong>: Each TCP segment includes source port number and destination port number, which respectively refers to the TCP segment sender’s and receiver’s address. Notes to mention that, here we utilizes “port” rather than “address”, that is said TCP answer for application layer and itself belong to tranport layer. Meanwhile, the combination of “port” and “IP address” is called socket, which is able to ensure a specific program in a computer. </p>
+</li>
+<li><p><strong>Sequence Number</strong>: Behind source and destination port, 32 bits have been utilized to reserver sequence number, which is randomlly produced during Three-Way Handshake process and used to ensure the correction of the TCP segment order. TCP is an order protocal, and the sequence number is used to make sure TCP message can be sequential sent to another computer’s application layer.</p>
+</li>
+<li><strong>Acknowledgement Number</strong>: Then, there is 32 bits Ackknowledgement Number in TCP Header. We call it as ack-number for simplify. Ack-numebr is mainly used to response last received TCP message that your message I have received.</li>
+<li>*<em>Header Length</em>: The length of TCP header, usually is 20 Bytes.</li>
+<li><strong>Flag Bits</strong>:<ul>
+<li><strong>URG=1</strong>: enable Uregent Pointer</li>
+<li><strong>ACK=1</strong>: enable Acknowledgement Number </li>
+<li><strong>PSH=1</strong>: This message should be submitted to application layer as soon as possible.</li>
+<li><strong>RST=1</strong>: reset connection</li>
+<li><strong>SYN=1</strong>: open a new connection</li>
+<li><strong>FIN=1</strong>: finish a connection</li>
+</ul>
+</li>
+<li><p><strong>CheckSum and Urgent Pinter</strong>:<br><strong>CheckSum</strong> is utilized to check correctness of TCP message to avoid the loss of data in transmission process. In TCP protocol, if transport find that the TCP package in error, it will request the Client/Server resend this package. Urgent pointer, I do not know the usage of this segment.</p>
+</li>
+<li><p><strong>Notes</strong>:</p>
+<ul>
+<li>Acknowledge Number(ack) and ACK flag are different things in TCP header.</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-Three-Way-Handshake"><a href="#2-Three-Way-Handshake" class="headerlink" title="2. Three-Way Handshake"></a>2. Three-Way Handshake</h2><p>Three-Way Handshake refers to that the client and server link establish process requires three data package in total.This process is generally raised by client function <strong>connect()</strong>, and the mainly process of three way handshake is shown in the following picture.</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/13348038-fe57d097a914e27c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<ul>
+<li><strong>First-Way Handshake</strong>:<br>Client sets SYN bits as 1, that is SYN=1, and randomly generates a sequence value i, that is seq=i, and sends data package to server. After that client changes state to SYN-SENT and waits for the ackknowledgement of server. Meanwhile, server keeps LISTEN state until the data package come in.</li>
+<li><strong>Second-Way Handshake</strong>:<br>Server receive the first package and check the SYN bit. When SYN=1, server knows that client suppose to establish connection with himself. Then the server responds an data package and sets ACK and SYN bit as 1. acknowledgement sequence assigns to i+1, that is ack=i+1, as a respose for first data package. Meanwhile, server also randomly produces a sequence j, that is seq=j, then this package would be send back. After that sever status is setted to SYN-RECV status.</li>
+<li><strong>Three-Way Handshake</strong>:<br>When Client receives the package, it will check the acknowledgement sequence’s value and the ACK bit. If ACK=1 and seq=i+1, it will send the last package of the Three-Way Handshake. The ACK bit also is setted as 1 and the seq=j+1, then this package is sent to server by client. Once this package leaves away client, it state is setted as ESTAB-LISHED which represents that the TCP connection has been established successfully. Then, the client and server can tranfer datas each other.<h2 id="3-Four-Way-Wavehand"><a href="#3-Four-Way-Wavehand" class="headerlink" title="3. Four-Way Wavehand"></a>3. Four-Way Wavehand</h2>Four-Way Wavehand refers to that close a TCP connection require four package between client and server in total. The reson why close a TCP connection needs four package is that TCP connection is a Full Duplex data transfers channel. Thus, client and server must close respectively, called half-close, to avoid loss of data.</li>
+</ul>
+<p><img src="https://upload-images.jianshu.io/upload_images/13348038-20a6e02b754a085e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<p>Duing to TCP connection is full duplex data transfers channel, each channel must be closed one by one to avoid loss of data. For example, when Client hasn’t data to transfrom, the client will send a package with FIN=1 to tell Server that I do not send any package, but I can receive package. After the server receives this package, it will response a package to tell client that I know you will not send package anymore, and keep sending package to client util data finish.</p>
+<ul>
+<li><strong>One-Way Wavehand</strong>:<br>Client sends a package with FIN=1, seq=i to colse the data send channel, and then Clinet change to FIN-WAIT1 state.</li>
+<li><strong>One-Way Wavehand</strong>:<br>After Servre receives the package with FIN=1, it sends a package with ACK=1,seq=i+1 to acknowledge received package, then changes to CLOSE-WAIT state.</li>
+<li><p><strong>One-Way Wavehand</strong>:<br>After Servre sends over it’s data, it will send a package with FIN=1, seq=j and changes it state to LAST-ACK.</p>
+</li>
+<li><p><strong>One-Way Wavehand</strong>:<br>The Client sends the last ACK package to Server, and changes t o TIME-WAIT state, which waits to 2MSL to avoid loss of package. Then Client is closed, and when the servre receive the last ACK package, it will be colsed to.</p>
+</li>
+<li><p><strong>Notes</strong>:</p>
+<ul>
+<li><strong>TIME-WAIT</strong>: MSL is the longest time of IP package exists in the internet. As result of routing abnormal, many packages always get loss in internet. And routing abnormal always requires several minute to fix it. During routing abnormal , package may get loss and loop in routes, meanwhile, transmitting end may resend this package, and the lossed package is called lost duplicate or wandering duplicate. TCP protocol must be able to deal wandering duplicate correctly. Therefore, TIME-WAIT state exist in TCP protocol is resonable. Firstly, Reliable implement of TCP full duplex protocol termination. Secondly, Allows duplicate segments to disappear in the network.<h2 id="4-Code-For-Linux"><a href="#4-Code-For-Linux" class="headerlink" title="4. Code For Linux"></a>4. Code For Linux</h2>There is the flow chart of TCP connection and linux code.</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://upload-images.jianshu.io/upload_images/13348038-ad7f7218e572285e.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="cs.jpg"></p>
+<pre><code>//Client 
+#include&lt;sys/socket.h&gt;
+#include&lt;time.h&gt;
+#define MAXLEN 1024
+int main(int argc,char** argv){
+    int sockfd;
+    struct sockaddr_in servaddr;
+    if(argc!=2)
+        err_quit(&quot;usage: tcpli &lt;IP address&gt;&quot;);
+    sockfd=socket(AF_INET,SOCK_STREAM,0);
+    bzero(&amp;servaddr,sizeof(servaddr));
+    servaddr.sin_family = AF_INET;
+    servaddr.sin_port=htons(13);
+    inet_port(AF_INET,argv[1],&amp;Servaddr.sin_addr);
+    connect(sockfd,(SA*)&amp;Servaddr,sizeof(servaddr));
+    str_cli(stdin,sockfd);
+    return 0;
+}
+
+void str_cli(FILE *fp,int sockfd){
+    char sendline[MAXLEN],recvline[MAXLEN];
+    while(fgets(sendline,MAXLEN,fp)!=NULL){
+        write(sockfd,sendline,strlen(sendline));
+        if(readline(sockfd,recvline,MAXLEN)==0)
+            err_quit(&quot;str_cli:server terminated prematruely&quot;);
+        fputs(recvline,stdout);
+    }
+}
+
+//Server
+#include&lt;sys/socket.h&gt;
+int main(){
+    int listenfd,connfd;
+    pid_t child_pid;
+    socklen_t clilen;
+    struct sockaddr_in cliaddr,servaddr;
+    listenfd=socket(AF_INET,SOCK_STREAM,0);
+    bzero(&amp;servaddr,sizeof(servaddr));
+    servaddr.sin_family = AF_INET;
+    servaddr.sin_addr.s_addr=htonl(INADDR_ANY);
+    servaddr.sin_port=htons(13);
+    bind(listenfd,(SA*)&amp;servaddr,sizeof(servaddr));
+    listen(listenfd,LISTENQ);
+    for(;;){
+        clilen=sizeof(cliaddr);
+        connfd=accept(listenfd,(SA*)&amp;cliaddr,&amp;clilen);
+        if((chilpid=fork()==0)){
+            close(listenfd);
+            str_echo(connfd);
+            exit(0);
+        }
+        close(connfd);
+    }
+    return 0;
+}
+
+void str_echo(int sockfd){
+    ssize_t n;
+    char buf[MAXLEN];
+    again:
+        while((n=read(sockfd,buf,MAXLEN))&gt;0)
+            write(sockfd,buf,n);
+        if(n&lt;0&amp;&amp;errno=EINTR)
+            goto again;
+        else if(n&lt;0)
+            err_sys(&quot;str_echo: read error&quot;);
+}
+</code></pre><h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] <a href="https://www.cnblogs.com/Qing-840/p/9283367.html" target="_blank" rel="noopener">https://www.cnblogs.com/Qing-840/p/9283367.html</a></p>
+<p>[2] &lt;&lt;TCP/IP Illustrated, Volume 1: The Protocols&gt;&gt;</p>
+<p>[3] &lt;<UNIX network programming>&gt;</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/05/15/TCP-Three-Way-Handshake/" data-id="cka8b3ciz000lokv64yq83s80" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/network/" rel="tag">network</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-SpinLock-In-Linux" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/05/15/SpinLock-In-Linux/" class="article-date">
@@ -837,52 +994,11 @@ int main(){
 
 
   
-    <article id="post-BFS-Of-Graph" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/15/BFS-Of-Graph/" class="article-date">
-  <time datetime="2020-05-15T14:21:49.000Z" itemprop="datePublished">2020-05-15</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/15/BFS-Of-Graph/">BFS Of Graph</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="Conception"><a href="#Conception" class="headerlink" title="Conception"></a>Conception</h2><p>Breath First Search, called BFS, which is one of graphics traversing or searching methods. The basic idea is exploreing as borad as possible of one node from any start node. BFS algorithm can be implementted by a queue, like the level traverse of tree.First of all, we push a node into queue as the start tarverse node of graph, when queue is not empty. We pop each node in queue, access it and find all the neiborhood node of current node, then push them into queue, until queue is empty. after a node is visited, it’s visit flag should be setted as true. </p>
-<p>There are two types of grapics storage structures – adjacent matrix storage and adjacency list storage. In this blog, we take adjacent matrix as the storage structure of graphics.</p>
-<p>There is a simple implementation of BFS as follows:</p>
-<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a><strong>Code</strong></h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="comment">////DFS</span></span><br><span class="line"><span class="comment">////using adjacent matrix storage</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Graph</span>&#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">////vertices </span></span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; m_vex;</span><br><span class="line">    <span class="comment">////arcs</span></span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&gt; m_arcs;</span><br><span class="line">    <span class="comment">////is visited flag</span></span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">bool</span>&gt; m_flags;</span><br><span class="line">    <span class="comment">////vertex number</span></span><br><span class="line">    <span class="keyword">int</span> m_vexnum;</span><br><span class="line">    </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line"></span><br><span class="line">    <span class="comment">//// constructor</span></span><br><span class="line">    Graph(<span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; vex)&#123;</span><br><span class="line">        m_vex=vex;</span><br><span class="line">        m_vexnum=vex.size();</span><br><span class="line">        m_arcs=<span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&gt;(m_vexnum,<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;(m_vexnum,<span class="number">0</span>));</span><br><span class="line">        m_flags=<span class="built_in">vector</span>&lt;<span class="keyword">bool</span>&gt;(m_vexnum,<span class="literal">false</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">////add edge</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">addEdge</span><span class="params">(<span class="keyword">int</span> i,<span class="keyword">int</span> j)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(i&lt;<span class="number">0</span>||i&gt;=m_vexnum) <span class="keyword">throw</span> <span class="string">"index bound exceed"</span>;</span><br><span class="line">        <span class="keyword">if</span>(j&lt;<span class="number">0</span>||j&gt;=m_vexnum) <span class="keyword">throw</span> <span class="string">"index bound exxceed"</span>;</span><br><span class="line">        m_arcs[i][j]=<span class="number">1</span>;</span><br><span class="line">        m_arcs[j][i]=<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">visit</span><span class="params">(<span class="keyword">int</span> i)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(i&lt;<span class="number">0</span>||i&gt;=m_vexnum) <span class="keyword">throw</span> <span class="string">"index bound exceed"</span>;</span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt;m_vex[i]&lt;&lt;<span class="string">" "</span>;</span><br><span class="line">    &#125; </span><br><span class="line">    </span><br><span class="line">    <span class="comment">////traverse</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">bfs</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;m_vexnum;++i)&#123;</span><br><span class="line">            <span class="keyword">if</span>(!m_flags[i])&#123;</span><br><span class="line">                <span class="built_in">queue</span>&lt;<span class="keyword">int</span>&gt; Q;</span><br><span class="line">                Q.push(i);</span><br><span class="line">                <span class="keyword">while</span>(!Q.empty())&#123;</span><br><span class="line">                    <span class="keyword">for</span>(<span class="keyword">int</span> j=Q.size()<span class="number">-1</span>;j&gt;=<span class="number">0</span>;--j)&#123;</span><br><span class="line">                        <span class="keyword">int</span> cur=Q.top();Q.pop();</span><br><span class="line">                        visit(cur);</span><br><span class="line">                        m_flags[cur]=<span class="number">1</span>;</span><br><span class="line">                        <span class="keyword">for</span>(<span class="keyword">int</span> k=<span class="number">0</span>;k&lt;m_vecnum;++k)&#123;</span><br><span class="line">                         <span class="keyword">if</span>(!m_flags[k]&amp;&amp;m_arcs[j][k]) Q.push(k);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line"><span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt; vex=&#123;<span class="string">"node1"</span>,<span class="string">"node2"</span>,<span class="string">"node3"</span>,<span class="string">"node4"</span>,<span class="string">"node5"</span>,<span class="string">"node6"</span>&#125;;</span><br><span class="line"><span class="function">Graph <span class="title">g</span><span class="params">(vex)</span></span>;</span><br><span class="line">g.addEdge(<span class="number">0</span>,<span class="number">1</span>);</span><br><span class="line">g.addEdge(<span class="number">0</span>,<span class="number">4</span>);</span><br><span class="line">g.addEdge(<span class="number">0</span>,<span class="number">2</span>);</span><br><span class="line">g.addEdge(<span class="number">2</span>,<span class="number">3</span>);</span><br><span class="line">g.addEdge(<span class="number">4</span>,<span class="number">5</span>);</span><br><span class="line">g.bfs();</span><br><span class="line"><span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/15/BFS-Of-Graph/" data-id="cka8b3cir0003okv6dfwv9zig" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Data-Structure/" rel="tag">Data Structure</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next &amp;raquo;</a>
+    <a class="extend prev" rel="prev" href="/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/">Next &amp;raquo;</a>
   </nav>
 
 </section>
@@ -928,6 +1044,10 @@ int main(){
       <ul>
         
           <li>
+            <a href="/2020/05/28/Count-Sort/">Count Sort</a>
+          </li>
+        
+          <li>
             <a href="/2020/05/27/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1IPC/">进程间通信IPC</a>
           </li>
         
@@ -941,10 +1061,6 @@ int main(){
         
           <li>
             <a href="/2020/05/24/Heap-Sort/">Heap Sort</a>
-          </li>
-        
-          <li>
-            <a href="/2020/05/15/What-Compile-Do-When-An-Empty-Class-Is-Declared/">What Compile Do When An Empty Class Is Declared</a>
           </li>
         
       </ul>

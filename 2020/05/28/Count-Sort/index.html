@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Count Sort | BeeCaffe&#39;s Personal Blogs</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Count Sort bases on the condition that all elements of waiting to sort are belong to a range in [0,k]. For example, nums&#x3D;{2,5,3,0,2,3,0,3}, all elements in nums are limited in range form 0 to 7, so k&#x3D;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Count Sort">
+<meta property="og:url" content="http://yoursite.com/2020/05/28/Count-Sort/index.html">
+<meta property="og:site_name" content="BeeCaffe&#39;s Personal Blogs">
+<meta property="og:description" content="Count Sort bases on the condition that all elements of waiting to sort are belong to a range in [0,k]. For example, nums&#x3D;{2,5,3,0,2,3,0,3}, all elements in nums are limited in range form 0 to 7, so k&#x3D;">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://yoursite.com/images/4.png">
+<meta property="og:image" content="http://yoursite.com/images/5.png">
+<meta property="og:image" content="http://yoursite.com/images/6.png">
+<meta property="article:published_time" content="2020-05-28T01:14:32.000Z">
+<meta property="article:modified_time" content="2020-05-28T02:20:43.149Z">
+<meta property="article:author" content="BeeCaffe">
+<meta property="article:tag" content="Introduce To Algorithm">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/images/4.png">
+  
+    <link rel="alternate" href="/atom.xml" title="BeeCaffe&#39;s Personal Blogs" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">BeeCaffe&#39;s Personal Blogs</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Count-Sort" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/28/Count-Sort/" class="article-date">
+  <time datetime="2020-05-28T01:14:32.000Z" itemprop="datePublished">2020-05-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Count Sort
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>Count Sort</strong> bases on the condition that all elements of waiting to sort are belong to a range in [0,k]. For example, <strong>nums={2,5,3,0,2,3,0,3}</strong>, all elements in <strong>nums</strong> are limited in range form 0 to 7, so k=7 for <strong>nums</strong>. (This is a very improtant condition for count sort, if array does not statisfy this priciple, count sort can not be used.)</p>
+<p>The basic idea of Count Sort is: for each elements x, supposing we know how many element smaller than x we can put x to the correct place directly.</p>
+<p>However, how can we know how many elements samller than x in nums? Inorder to know that, we can build a new array, which we call <strong>countArray</strong> to count each element occurs times in nums. Then, we traver <strong>countArray</strong> from begin to end to accumulate the value in <strong>countArray</strong>, after that, the elements in <strong>countArray</strong> are the correct index of sorted value of array <strong>nums</strong>. Traveing array <strong>nums</strong> and using <strong>countArray</strong> to find the correct location for ecah value in <strong>nums</strong> and put it to result array <strong>outputArray</strong>. </p>
+<p>And, notice that, there are same element exist in <strong>nums</strong>. Therefore, when we put a <strong>nums</strong> value to <strong>outputArray</strong>, <strong>countArray[nums[i]]–</strong> should be performed, after that, when next <strong>nums[i]</strong> value occurs in <strong>nums</strong>, this value can be  putted to correct location.</p>
+<h2 id="Diagram"><a href="#Diagram" class="headerlink" title="Diagram"></a>Diagram</h2><ul>
+<li>counting occur times of each element in nums<br><img src="/images/4.png" alt="image"></li>
+<li>accumulating the correct location of each element<br><img src="/images/5.png" alt="image"></li>
+<li>put nums element to correct location in outputArray<br><img src="/images/6.png" alt="image"><h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">count_sort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;nums)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n=nums.size();</span><br><span class="line">    <span class="function"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; <span class="title">countArray</span><span class="params">(n,<span class="number">0</span>)</span></span>;</span><br><span class="line">    <span class="comment">//counting occur times of each element in nums</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">auto</span> i:nums) countArray[i]++;</span><br><span class="line">    <span class="comment">//accumulating the correct location of each element</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;countArray.size();++i)&#123;</span><br><span class="line">        countArray[i]=countArray[i]+countArray[i<span class="number">-1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//put nums element to correct location in outputArray</span></span><br><span class="line">    <span class="function"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; <span class="title">outputArray</span><span class="params">(n,<span class="number">0</span>)</span></span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;++i)&#123;</span><br><span class="line">        outputArray[countArray[nums[i]]]=nums[i];</span><br><span class="line">        countArray[nums[i]]--;</span><br><span class="line">    &#125;</span><br><span class="line">    nums=outputArray;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; nums=&#123;<span class="number">2</span>,<span class="number">5</span>,<span class="number">3</span>,<span class="number">0</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">0</span>,<span class="number">3</span>&#125;;</span><br><span class="line">    count_sort(nums);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">auto</span> i:nums) <span class="built_in">cout</span>&lt;&lt;i&lt;&lt;<span class="string">" "</span>;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Time-Complexity"><a href="#Time-Complexity" class="headerlink" title="Time Complexity"></a>Time Complexity</h2><strong>Count Sort</strong> is not a comparsion based sorting algorithm, thus, althought it’s condition is strictliy than comparsion based sorting method, it has a fater time complextiy. In this algorithm, we only travel the array without back trace operation, so the time complexity is <strong>O(n)</strong>, which is better than <strong>O(nlog(n))</strong>.</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/05/28/Count-Sort/" data-id="ckaq5hqp90000c8v6dhwkgjit" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Introduce-To-Algorithm/" rel="tag">Introduce To Algorithm</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/05/27/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1IPC/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">进程间通信IPC</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Data-Structure/" rel="tag">Data Structure</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Introduce-To-Algorithm/" rel="tag">Introduce To Algorithm</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/network/" rel="tag">network</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag">面试</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/C/" style="font-size: 13.33px;">C++</a> <a href="/tags/Data-Structure/" style="font-size: 13.33px;">Data Structure</a> <a href="/tags/Introduce-To-Algorithm/" style="font-size: 16.67px;">Introduce To Algorithm</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/network/" style="font-size: 10px;">network</a> <a href="/tags/%E9%9D%A2%E8%AF%95/" style="font-size: 10px;">面试</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">May 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/05/28/Count-Sort/">Count Sort</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/27/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1IPC/">进程间通信IPC</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/26/Quick-Sort/">Quick Sort</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/24/Heap-Sort/">Heap-Sort</a>
+          </li>
+        
+          <li>
+            <a href="/2020/05/24/Heap-Sort/">Heap Sort</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 BeeCaffe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

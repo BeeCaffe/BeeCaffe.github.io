@@ -64,6 +64,54 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Count-Sort" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/28/Count-Sort/" class="article-date">
+  <time datetime="2020-05-28T01:14:32.000Z" itemprop="datePublished">2020-05-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/28/Count-Sort/">Count Sort</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><strong>Count Sort</strong> bases on the condition that all elements of waiting to sort are belong to a range in [0,k]. For example, <strong>nums={2,5,3,0,2,3,0,3}</strong>, all elements in <strong>nums</strong> are limited in range form 0 to 7, so k=7 for <strong>nums</strong>. (This is a very improtant condition for count sort, if array does not statisfy this priciple, count sort can not be used.)</p>
+<p>The basic idea of Count Sort is: for each elements x, supposing we know how many element smaller than x we can put x to the correct place directly.</p>
+<p>However, how can we know how many elements samller than x in nums? Inorder to know that, we can build a new array, which we call <strong>countArray</strong> to count each element occurs times in nums. Then, we traver <strong>countArray</strong> from begin to end to accumulate the value in <strong>countArray</strong>, after that, the elements in <strong>countArray</strong> are the correct index of sorted value of array <strong>nums</strong>. Traveing array <strong>nums</strong> and using <strong>countArray</strong> to find the correct location for ecah value in <strong>nums</strong> and put it to result array <strong>outputArray</strong>. </p>
+<p>And, notice that, there are same element exist in <strong>nums</strong>. Therefore, when we put a <strong>nums</strong> value to <strong>outputArray</strong>, <strong>countArray[nums[i]]–</strong> should be performed, after that, when next <strong>nums[i]</strong> value occurs in <strong>nums</strong>, this value can be  putted to correct location.</p>
+<h2 id="Diagram"><a href="#Diagram" class="headerlink" title="Diagram"></a>Diagram</h2><ul>
+<li>counting occur times of each element in nums<br><img src="/images/4.png" alt="image"></li>
+<li>accumulating the correct location of each element<br><img src="/images/5.png" alt="image"></li>
+<li>put nums element to correct location in outputArray<br><img src="/images/6.png" alt="image"><h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">count_sort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;nums)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n=nums.size();</span><br><span class="line">    <span class="function"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; <span class="title">countArray</span><span class="params">(n,<span class="number">0</span>)</span></span>;</span><br><span class="line">    <span class="comment">//counting occur times of each element in nums</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">auto</span> i:nums) countArray[i]++;</span><br><span class="line">    <span class="comment">//accumulating the correct location of each element</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;countArray.size();++i)&#123;</span><br><span class="line">        countArray[i]=countArray[i]+countArray[i<span class="number">-1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//put nums element to correct location in outputArray</span></span><br><span class="line">    <span class="function"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; <span class="title">outputArray</span><span class="params">(n,<span class="number">0</span>)</span></span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;++i)&#123;</span><br><span class="line">        outputArray[countArray[nums[i]]]=nums[i];</span><br><span class="line">        countArray[nums[i]]--;</span><br><span class="line">    &#125;</span><br><span class="line">    nums=outputArray;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; nums=&#123;<span class="number">2</span>,<span class="number">5</span>,<span class="number">3</span>,<span class="number">0</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">0</span>,<span class="number">3</span>&#125;;</span><br><span class="line">    count_sort(nums);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">auto</span> i:nums) <span class="built_in">cout</span>&lt;&lt;i&lt;&lt;<span class="string">" "</span>;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Time-Complexity"><a href="#Time-Complexity" class="headerlink" title="Time Complexity"></a>Time Complexity</h2><strong>Count Sort</strong> is not a comparsion based sorting algorithm, thus, althought it’s condition is strictliy than comparsion based sorting method, it has a fater time complextiy. In this algorithm, we only travel the array without back trace operation, so the time complexity is <strong>O(n)</strong>, which is better than <strong>O(nlog(n))</strong>.</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/05/28/Count-Sort/" data-id="ckaq5hqp90000c8v6dhwkgjit" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Introduce-To-Algorithm/" rel="tag">Introduce To Algorithm</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-进程间通信IPC" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/05/27/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1IPC/" class="article-date">
@@ -964,168 +1012,11 @@ int main()
 
 
   
-    <article id="post-TCP-Three-Way-Handshake" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/15/TCP-Three-Way-Handshake/" class="article-date">
-  <time datetime="2020-05-15T14:31:35.000Z" itemprop="datePublished">2020-05-15</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/15/TCP-Three-Way-Handshake/">TCP Three Way Handshake</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1-TCP-Header-Format"><a href="#1-TCP-Header-Format" class="headerlink" title="1. TCP Header Format"></a>1. TCP Header Format</h2><p>As is shown in the following picture, the TCP header has 20 Bytes in total.</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/13348038-e096bec9fa7edcef.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
-<ul>
-<li><p><strong>Port Number</strong>: Each TCP segment includes source port number and destination port number, which respectively refers to the TCP segment sender’s and receiver’s address. Notes to mention that, here we utilizes “port” rather than “address”, that is said TCP answer for application layer and itself belong to tranport layer. Meanwhile, the combination of “port” and “IP address” is called socket, which is able to ensure a specific program in a computer. </p>
-</li>
-<li><p><strong>Sequence Number</strong>: Behind source and destination port, 32 bits have been utilized to reserver sequence number, which is randomlly produced during Three-Way Handshake process and used to ensure the correction of the TCP segment order. TCP is an order protocal, and the sequence number is used to make sure TCP message can be sequential sent to another computer’s application layer.</p>
-</li>
-<li><strong>Acknowledgement Number</strong>: Then, there is 32 bits Ackknowledgement Number in TCP Header. We call it as ack-number for simplify. Ack-numebr is mainly used to response last received TCP message that your message I have received.</li>
-<li>*<em>Header Length</em>: The length of TCP header, usually is 20 Bytes.</li>
-<li><strong>Flag Bits</strong>:<ul>
-<li><strong>URG=1</strong>: enable Uregent Pointer</li>
-<li><strong>ACK=1</strong>: enable Acknowledgement Number </li>
-<li><strong>PSH=1</strong>: This message should be submitted to application layer as soon as possible.</li>
-<li><strong>RST=1</strong>: reset connection</li>
-<li><strong>SYN=1</strong>: open a new connection</li>
-<li><strong>FIN=1</strong>: finish a connection</li>
-</ul>
-</li>
-<li><p><strong>CheckSum and Urgent Pinter</strong>:<br><strong>CheckSum</strong> is utilized to check correctness of TCP message to avoid the loss of data in transmission process. In TCP protocol, if transport find that the TCP package in error, it will request the Client/Server resend this package. Urgent pointer, I do not know the usage of this segment.</p>
-</li>
-<li><p><strong>Notes</strong>:</p>
-<ul>
-<li>Acknowledge Number(ack) and ACK flag are different things in TCP header.</li>
-</ul>
-</li>
-</ul>
-<h2 id="2-Three-Way-Handshake"><a href="#2-Three-Way-Handshake" class="headerlink" title="2. Three-Way Handshake"></a>2. Three-Way Handshake</h2><p>Three-Way Handshake refers to that the client and server link establish process requires three data package in total.This process is generally raised by client function <strong>connect()</strong>, and the mainly process of three way handshake is shown in the following picture.</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/13348038-fe57d097a914e27c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
-<ul>
-<li><strong>First-Way Handshake</strong>:<br>Client sets SYN bits as 1, that is SYN=1, and randomly generates a sequence value i, that is seq=i, and sends data package to server. After that client changes state to SYN-SENT and waits for the ackknowledgement of server. Meanwhile, server keeps LISTEN state until the data package come in.</li>
-<li><strong>Second-Way Handshake</strong>:<br>Server receive the first package and check the SYN bit. When SYN=1, server knows that client suppose to establish connection with himself. Then the server responds an data package and sets ACK and SYN bit as 1. acknowledgement sequence assigns to i+1, that is ack=i+1, as a respose for first data package. Meanwhile, server also randomly produces a sequence j, that is seq=j, then this package would be send back. After that sever status is setted to SYN-RECV status.</li>
-<li><strong>Three-Way Handshake</strong>:<br>When Client receives the package, it will check the acknowledgement sequence’s value and the ACK bit. If ACK=1 and seq=i+1, it will send the last package of the Three-Way Handshake. The ACK bit also is setted as 1 and the seq=j+1, then this package is sent to server by client. Once this package leaves away client, it state is setted as ESTAB-LISHED which represents that the TCP connection has been established successfully. Then, the client and server can tranfer datas each other.<h2 id="3-Four-Way-Wavehand"><a href="#3-Four-Way-Wavehand" class="headerlink" title="3. Four-Way Wavehand"></a>3. Four-Way Wavehand</h2>Four-Way Wavehand refers to that close a TCP connection require four package between client and server in total. The reson why close a TCP connection needs four package is that TCP connection is a Full Duplex data transfers channel. Thus, client and server must close respectively, called half-close, to avoid loss of data.</li>
-</ul>
-<p><img src="https://upload-images.jianshu.io/upload_images/13348038-20a6e02b754a085e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
-<p>Duing to TCP connection is full duplex data transfers channel, each channel must be closed one by one to avoid loss of data. For example, when Client hasn’t data to transfrom, the client will send a package with FIN=1 to tell Server that I do not send any package, but I can receive package. After the server receives this package, it will response a package to tell client that I know you will not send package anymore, and keep sending package to client util data finish.</p>
-<ul>
-<li><strong>One-Way Wavehand</strong>:<br>Client sends a package with FIN=1, seq=i to colse the data send channel, and then Clinet change to FIN-WAIT1 state.</li>
-<li><strong>One-Way Wavehand</strong>:<br>After Servre receives the package with FIN=1, it sends a package with ACK=1,seq=i+1 to acknowledge received package, then changes to CLOSE-WAIT state.</li>
-<li><p><strong>One-Way Wavehand</strong>:<br>After Servre sends over it’s data, it will send a package with FIN=1, seq=j and changes it state to LAST-ACK.</p>
-</li>
-<li><p><strong>One-Way Wavehand</strong>:<br>The Client sends the last ACK package to Server, and changes t o TIME-WAIT state, which waits to 2MSL to avoid loss of package. Then Client is closed, and when the servre receive the last ACK package, it will be colsed to.</p>
-</li>
-<li><p><strong>Notes</strong>:</p>
-<ul>
-<li><strong>TIME-WAIT</strong>: MSL is the longest time of IP package exists in the internet. As result of routing abnormal, many packages always get loss in internet. And routing abnormal always requires several minute to fix it. During routing abnormal , package may get loss and loop in routes, meanwhile, transmitting end may resend this package, and the lossed package is called lost duplicate or wandering duplicate. TCP protocol must be able to deal wandering duplicate correctly. Therefore, TIME-WAIT state exist in TCP protocol is resonable. Firstly, Reliable implement of TCP full duplex protocol termination. Secondly, Allows duplicate segments to disappear in the network.<h2 id="4-Code-For-Linux"><a href="#4-Code-For-Linux" class="headerlink" title="4. Code For Linux"></a>4. Code For Linux</h2>There is the flow chart of TCP connection and linux code.</li>
-</ul>
-</li>
-</ul>
-<p><img src="https://upload-images.jianshu.io/upload_images/13348038-ad7f7218e572285e.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="cs.jpg"></p>
-<pre><code>//Client 
-#include&lt;sys/socket.h&gt;
-#include&lt;time.h&gt;
-#define MAXLEN 1024
-int main(int argc,char** argv){
-    int sockfd;
-    struct sockaddr_in servaddr;
-    if(argc!=2)
-        err_quit(&quot;usage: tcpli &lt;IP address&gt;&quot;);
-    sockfd=socket(AF_INET,SOCK_STREAM,0);
-    bzero(&amp;servaddr,sizeof(servaddr));
-    servaddr.sin_family = AF_INET;
-    servaddr.sin_port=htons(13);
-    inet_port(AF_INET,argv[1],&amp;Servaddr.sin_addr);
-    connect(sockfd,(SA*)&amp;Servaddr,sizeof(servaddr));
-    str_cli(stdin,sockfd);
-    return 0;
-}
-
-void str_cli(FILE *fp,int sockfd){
-    char sendline[MAXLEN],recvline[MAXLEN];
-    while(fgets(sendline,MAXLEN,fp)!=NULL){
-        write(sockfd,sendline,strlen(sendline));
-        if(readline(sockfd,recvline,MAXLEN)==0)
-            err_quit(&quot;str_cli:server terminated prematruely&quot;);
-        fputs(recvline,stdout);
-    }
-}
-
-//Server
-#include&lt;sys/socket.h&gt;
-int main(){
-    int listenfd,connfd;
-    pid_t child_pid;
-    socklen_t clilen;
-    struct sockaddr_in cliaddr,servaddr;
-    listenfd=socket(AF_INET,SOCK_STREAM,0);
-    bzero(&amp;servaddr,sizeof(servaddr));
-    servaddr.sin_family = AF_INET;
-    servaddr.sin_addr.s_addr=htonl(INADDR_ANY);
-    servaddr.sin_port=htons(13);
-    bind(listenfd,(SA*)&amp;servaddr,sizeof(servaddr));
-    listen(listenfd,LISTENQ);
-    for(;;){
-        clilen=sizeof(cliaddr);
-        connfd=accept(listenfd,(SA*)&amp;cliaddr,&amp;clilen);
-        if((chilpid=fork()==0)){
-            close(listenfd);
-            str_echo(connfd);
-            exit(0);
-        }
-        close(connfd);
-    }
-    return 0;
-}
-
-void str_echo(int sockfd){
-    ssize_t n;
-    char buf[MAXLEN];
-    again:
-        while((n=read(sockfd,buf,MAXLEN))&gt;0)
-            write(sockfd,buf,n);
-        if(n&lt;0&amp;&amp;errno=EINTR)
-            goto again;
-        else if(n&lt;0)
-            err_sys(&quot;str_echo: read error&quot;);
-}
-</code></pre><h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] <a href="https://www.cnblogs.com/Qing-840/p/9283367.html" target="_blank" rel="noopener">https://www.cnblogs.com/Qing-840/p/9283367.html</a></p>
-<p>[2] &lt;&lt;TCP/IP Illustrated, Volume 1: The Protocols&gt;&gt;</p>
-<p>[3] &lt;<UNIX network programming>&gt;</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/15/TCP-Three-Way-Handshake/" data-id="cka8b3ciz000lokv64yq83s80" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/network/" rel="tag">network</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
     
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
   </nav>
 
 </section>
@@ -1171,6 +1062,10 @@ void str_echo(int sockfd){
       <ul>
         
           <li>
+            <a href="/2020/05/28/Count-Sort/">Count Sort</a>
+          </li>
+        
+          <li>
             <a href="/2020/05/27/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1IPC/">进程间通信IPC</a>
           </li>
         
@@ -1184,10 +1079,6 @@ void str_echo(int sockfd){
         
           <li>
             <a href="/2020/05/24/Heap-Sort/">Heap Sort</a>
-          </li>
-        
-          <li>
-            <a href="/2020/05/15/What-Compile-Do-When-An-Empty-Class-Is-Declared/">What Compile Do When An Empty Class Is Declared</a>
           </li>
         
       </ul>
