@@ -64,6 +64,84 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Install-Boost-In-Linux" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/15/Install-Boost-In-Linux/" class="article-date">
+  <time datetime="2020-05-15T14:32:34.000Z" itemprop="datePublished">2020-05-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/15/Install-Boost-In-Linux/">Install Boost In Linux</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-Fast-install"><a href="#1-Fast-install" class="headerlink" title="1. Fast install"></a>1. Fast install</h2><p>Typing the following command in linux console to install boost dirtectly.</p>
+<p><strong>Notes</strong>: you’d best add <strong>sudo</strong> before you command to aviod premission deny especially in system level path.</p>
+<pre><code>wget https://dl.bintray.com/boostorg/release/1.72.0/source/boost_1_72_0.tar.gz
+
+tar -xzvf boost_1_54_0.tar.gz
+
+cd boost_1_54_0
+
+./bootstrap.sh --prefix=/usr/local
+
+./b2 install --with=all
+
+## you can find boost library in /usr/local/lib.
+</code></pre><h2 id="2-Test-example"><a href="#2-Test-example" class="headerlink" title="2. Test example"></a>2. Test example</h2><p>There is an test example of boost libray, you just need to copy the soucure code of the following program and compile this source code:</p>
+<ul>
+<li><p><strong>command</strong></p>
+<pre><code>vim boost_test.cc
+
+g++ boost_test.cc -L/usr/local/lib -lboost_system
+
+./a.out
+</code></pre></li>
+<li><p><strong>source code</strong></p>
+<pre><code>#include &lt;boost/lexical_cast.hpp&gt;
+#include &lt;iostream&gt;
+int main()
+{
+        using boost::lexical_cast;
+        int a = lexical_cast&lt;int&gt;(&quot;123&quot;);
+        double b = lexical_cast&lt;double&gt;(&quot;123.12&quot;);
+        std::cout&lt;&lt;a&lt;&lt;std::endl;
+        std::cout&lt;&lt;b&lt;&lt;std::endl;
+        return 0;
+}
+</code></pre></li>
+<li><p><strong>output</strong></p>
+<pre><code>123
+123.12
+</code></pre></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/05/15/Install-Boost-In-Linux/" data-id="cka8b3cis0005okv62n2c9b82" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-TCP-Three-Way-Handshake" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/05/15/TCP-Three-Way-Handshake/" class="article-date">
@@ -886,114 +964,6 @@ void str_echo(int sockfd){
 
 
   
-    <article id="post-DFS-Of-Graph" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/15/DFS-Of-Graph/" class="article-date">
-  <time datetime="2020-05-15T14:22:42.000Z" itemprop="datePublished">2020-05-15</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/15/DFS-Of-Graph/">DFS Of Graph</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="Conception"><a href="#Conception" class="headerlink" title="Conception"></a>Conception</h2><p>Depth First Search, called DFS, which is one of graphics traversing or searching methods. The basic idea is exploreing as far as possible along each branch from any start node. DFS algorithm can be implementted recurrently, after a node is visited, it’s visit flag should be setted as true. if the current node has no other un-traveled adjacent nodes, it should return, and find another un-traveled branch.</p>
-<p>There are two types of grapics storage structures – adjacent matrix storage and adjacency list storage. In this blog, we take adjacent matrix as the storage structure of graphics.</p>
-<p>There is a simple implementation of DFS as follows:</p>
-<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><pre><code>#include&lt;iostream&gt;
-#include&lt;vector&gt;
-using namespace std;
-////DFS
-////using adjacent matrix storage
-class Graph{
-    private:
-        ////vertices 
-        vector&lt;string&gt; m_vex;
-        ////arcs
-        vector&lt;vector&lt;int&gt;&gt; m_arcs;
-        ////is visited flag
-        vector&lt;bool&gt; m_flags;
-        ////vertex number
-        int m_vexnum;
-
-    public:
-
-        //// constructor
-        Graph(vector&lt;string&gt; vex){
-            m_vex=vex;
-            m_vexnum=vex.size();
-            m_arcs=vector&lt;vector&lt;int&gt;&gt;(m_vexnum,vector&lt;int&gt;(m_vexnum,0));
-            m_flags=vector&lt;bool&gt;(m_vexnum,false);
-        }
-
-        ////add edge
-        void addEdge(int i,int j){
-            if(i&lt;0||i&gt;=m_vexnum) throw &quot;index bound exceed&quot;;
-            if(j&lt;0||j&gt;=m_vexnum) throw &quot;index bound exxceed&quot;;
-            m_arcs[i][j]=1;
-            m_arcs[j][i]=1;
-        }
-
-        void visit(int i){
-            if(i&lt;0||i&gt;=m_vexnum) throw &quot;index bound exceed&quot;;
-            cout&lt;&lt;m_vex[i]&lt;&lt;&quot; &quot;;
-        } 
-
-        ////traverse
-        void traverse(int i){
-            if(i&lt;0||i&gt;=m_vexnum) throw &quot;index bound exceed&quot;;
-            visit(i);
-            for(int j=0;j&lt;m_vexnum;++j){
-                if(m_arc[i][j]==1&amp;&amp;m_flags[j]==false) traverse(j);
-            }
-        }
-
-        ////dfs
-        void dfs(){
-            for(int i=0;i&lt;m_vexnum;++i){
-                if(m_flags[i]==false) traverse(i);
-            }
-        }   
-};
-
-int main(){
-    vector&lt;string&gt; vex={&quot;node1&quot;,&quot;node2&quot;,&quot;node3&quot;,&quot;node4&quot;,&quot;node5&quot;,&quot;node6&quot;};
-    Graph g(vex);
-    g.addEdge(0,1);
-    g.addEdge(0,4);
-    g.addEdge(0,2);
-    g.addEdge(2,3);
-    g.addEdge(4,5);
-    g.dfs();
-    return 0;
-}
-</code></pre>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/15/DFS-Of-Graph/" data-id="cka8b3ciw000dokv67yqrhln1" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Data-Structure/" rel="tag">Data Structure</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -1044,6 +1014,10 @@ int main(){
       <ul>
         
           <li>
+            <a href="/2020/05/30/Letters-and-Numbers/">Letters and Numbers</a>
+          </li>
+        
+          <li>
             <a href="/2020/05/28/Count-Sort/">Count Sort</a>
           </li>
         
@@ -1057,10 +1031,6 @@ int main(){
         
           <li>
             <a href="/2020/05/24/Heap-Sort/">Heap-Sort</a>
-          </li>
-        
-          <li>
-            <a href="/2020/05/24/Heap-Sort/">Heap Sort</a>
           </li>
         
       </ul>

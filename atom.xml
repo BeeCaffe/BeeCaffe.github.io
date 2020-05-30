@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2020-05-28T02:28:20.815Z</updated>
+  <updated>2020-05-30T02:18:49.574Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,20 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Letters and Numbers</title>
+    <link href="http://yoursite.com/2020/05/30/Letters-and-Numbers/"/>
+    <id>http://yoursite.com/2020/05/30/Letters-and-Numbers/</id>
+    <published>2020-05-30T02:18:49.000Z</published>
+    <updated>2020-05-30T02:18:49.574Z</updated>
+    
+    <summary type="html">
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>Count Sort</title>
@@ -457,29 +471,6 @@
     
     
       <category term="Linux" scheme="http://yoursite.com/tags/Linux/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>DFS Of Graph</title>
-    <link href="http://yoursite.com/2020/05/15/DFS-Of-Graph/"/>
-    <id>http://yoursite.com/2020/05/15/DFS-Of-Graph/</id>
-    <published>2020-05-15T14:22:42.000Z</published>
-    <updated>2020-05-15T14:23:07.232Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="Conception"><a href="#Conception" class="headerlink" title="Conception"></a>Conception</h2><p>Depth First Search, called DFS, which is one of graphics traversing or searching methods. The basic idea is exploreing as far as possible along each branch from any start node. DFS algorithm can be implementted recurrently, after a node is visited, it’s visit flag should be setted as true. if the current node has no other un-traveled adjacent nodes, it should return, and find another un-traveled branch.</p><p>There are two types of grapics storage structures – adjacent matrix storage and adjacency list storage. In this blog, we take adjacent matrix as the storage structure of graphics.</p><p>There is a simple implementation of DFS as follows:</p><h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><pre><code>#include&lt;iostream&gt;#include&lt;vector&gt;using namespace std;////DFS////using adjacent matrix storageclass Graph{    private:        ////vertices         vector&lt;string&gt; m_vex;        ////arcs        vector&lt;vector&lt;int&gt;&gt; m_arcs;        ////is visited flag        vector&lt;bool&gt; m_flags;        ////vertex number        int m_vexnum;    public:        //// constructor        Graph(vector&lt;string&gt; vex){            m_vex=vex;            m_vexnum=vex.size();            m_arcs=vector&lt;vector&lt;int&gt;&gt;(m_vexnum,vector&lt;int&gt;(m_vexnum,0));            m_flags=vector&lt;bool&gt;(m_vexnum,false);        }        ////add edge        void addEdge(int i,int j){            if(i&lt;0||i&gt;=m_vexnum) throw &quot;index bound exceed&quot;;            if(j&lt;0||j&gt;=m_vexnum) throw &quot;index bound exxceed&quot;;            m_arcs[i][j]=1;            m_arcs[j][i]=1;        }        void visit(int i){            if(i&lt;0||i&gt;=m_vexnum) throw &quot;index bound exceed&quot;;            cout&lt;&lt;m_vex[i]&lt;&lt;&quot; &quot;;        }         ////traverse        void traverse(int i){            if(i&lt;0||i&gt;=m_vexnum) throw &quot;index bound exceed&quot;;            visit(i);            for(int j=0;j&lt;m_vexnum;++j){                if(m_arc[i][j]==1&amp;&amp;m_flags[j]==false) traverse(j);            }        }        ////dfs        void dfs(){            for(int i=0;i&lt;m_vexnum;++i){                if(m_flags[i]==false) traverse(i);            }        }   };int main(){    vector&lt;string&gt; vex={&quot;node1&quot;,&quot;node2&quot;,&quot;node3&quot;,&quot;node4&quot;,&quot;node5&quot;,&quot;node6&quot;};    Graph g(vex);    g.addEdge(0,1);    g.addEdge(0,4);    g.addEdge(0,2);    g.addEdge(2,3);    g.addEdge(4,5);    g.dfs();    return 0;}</code></pre>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h2 id=&quot;Conception&quot;&gt;&lt;a href=&quot;#Conception&quot; class=&quot;headerlink&quot; title=&quot;Conception&quot;&gt;&lt;/a&gt;Conception&lt;/h2&gt;&lt;p&gt;Depth First Search, called DFS, which 
-      
-    
-    </summary>
-    
-    
-      <category term="Data Structure" scheme="http://yoursite.com/tags/Data-Structure/"/>
     
   </entry>
   
