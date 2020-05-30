@@ -64,6 +64,109 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Variable-Arguments-In-C" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/15/Variable-Arguments-In-C/" class="article-date">
+  <time datetime="2020-05-15T14:33:34.000Z" itemprop="datePublished">2020-05-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/15/Variable-Arguments-In-C/">Variable Arguments In C++</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-what-is-variable-arguments"><a href="#1-what-is-variable-arguments" class="headerlink" title="1. what is variable arguments?"></a>1. what is variable arguments?</h2><p>In C\C++ program we always need some functions which arguments number are variable, such as <strong>printf()</strong> and <strong>scanf()</strong>. We called those function as variable arguments function and we use placeholder <strong>…</strong> to represent the uncertained[1]. arguments.</p>
+<pre><code>int printf(const char* fmt, ...);
+int scanf(const char* fmt, ...);
+</code></pre><p>And, there is an simple example of variable arguments:</p>
+<pre><code>#include &lt;iostream&gt;
+#include &lt;cstdarg&gt;
+
+/*
+ * @brief : The purpose of this function is to print any number of integer,
+ * @param[in] count : The number of int you suppose to print.
+ * @param[in] ... : variable arguments.
+ */
+int print_args(int count, ...){
+    int i,value;
+    //// the pointer of arguments address
+    va_list arg_ptr;
+    //// get address of first argument
+    va_start(arg_ptr, count);
+    for(int i=0; i&lt;count; ++i){
+        //// get the next argument address
+        value = va_arg(arg_ptr,int);
+        printf(&quot;position %d=%d\n&quot;,i+1,value);
+    }
+    //// set arg_ptr yo 0
+    va_end(arg_ptr);
+}
+
+int main() {
+    print_args(5,1,2,3,4,5);
+    return 0;
+}
+</code></pre><h2 id="2-The-macros-of-va-list-va-start-va-arg-and-va-end"><a href="#2-The-macros-of-va-list-va-start-va-arg-and-va-end" class="headerlink" title="2. The macros of va_list, va_start, va_arg and va_end"></a>2. The macros of va_list, va_start, va_arg and va_end</h2><p>Those types are used as parameters for the macros defined in <cstdarg> to retrieve the additional arguments of a function[2].</p>
+<p><strong>va_list</strong> The type to hold information about variable arguments [2].</p>
+<p><strong>va_start(va_list,paramN)</strong> Initialize a variable argument list. Initailizes <strong>va_list</strong> type pointer to retrieve the additional arguments after paramN[2].</p>
+<p><strong>va_arg(va_list, type)</strong> Retrieve next argument.</p>
+<p><strong>va_end(va_list)</strong> End using variable argument list, set va_list type argument to nullptr.</p>
+<p>We can illustrate the upper for loop as the following picture:</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/13348038-c8913e90783c0b8f.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="va_list.jpg"><br>45B0883250139C6D9A27)</p>
+<p>when we call <strong>va_start(arg_ptr,count)</strong>, the arg_ptr has been set to the start address of variable arguments list. Then, the <strong>va_arg(arg_ptr,int)</strong> function move the arg_ptr pointer. In the end, we set arg_ptr to zero.</p>
+<h2 id="3-vsprintf-char-str-const-char-format-va-list-arg"><a href="#3-vsprintf-char-str-const-char-format-va-list-arg" class="headerlink" title="3. vsprintf(char str, const char format, va_list arg)"></a>3. vsprintf(char<em> str, const char</em> format, va_list arg)</h2><p>There is a utilization of variable arguments or said va_list, that is function <strong>vsprintf()</strong>, this function is able to print variable arguments in a suitable format.</p>
+<p><strong> str </strong> the char* pointer, point to char[] where we suppose to print.</p>
+<p><strong>format</strong> the contorl format of string, such as “%d,%f,%n” …</p>
+<p><strong>arg</strong> va_list type argument which points to the start position of variable arguments list.</p>
+<p>There is a example to utilize va_list and vsprintf()<strong>[3]</strong> :</p>
+<pre><code>#include&lt;stdio.h&gt;
+#include&lt;stdarg.h&gt;
+char buffer[80];
+int vspfunc(char* format, ...){
+    va_list arg;
+    int ans;
+    va_start(arg,format);
+    ans = vsprintf(buffer,format,arg);
+    va_end(arg);
+    return ans;
+}
+
+int main(){
+    int i = 5;
+    float f = 27.0;
+    char str[50] = &quot;runoob.com&quot;;
+    vspfunc(&quot;%d %f %s&quot;,i,f,str);
+    printf(&quot;%s\n&quot;,buffer);
+    return 0;
+}
+</code></pre><h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] <a href="https://www.cnblogs.com/zlcxbb/p/6802895.html" target="_blank" rel="noopener">https://www.cnblogs.com/zlcxbb/p/6802895.html</a><br>[2] <a href="http://www.cplusplus.com/reference/cstdarg/va_list/" target="_blank" rel="noopener">http://www.cplusplus.com/reference/cstdarg/va_list/</a><br>[3] <a href="https://www.runoob.com/cprogramming/c-function-vsprintf.html" target="_blank" rel="noopener">https://www.runoob.com/cprogramming/c-function-vsprintf.html</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/05/15/Variable-Arguments-In-C/" data-id="cka8b3cj6000wokv6513bc4az" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/" rel="tag">C++</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Install-Boost-In-Linux" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/05/15/Install-Boost-In-Linux/" class="article-date">
@@ -901,69 +1004,6 @@ void str_echo(int sockfd){
 
 
   
-    <article id="post-Basic-IO-In-Linux" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/15/Basic-IO-In-Linux/" class="article-date">
-  <time datetime="2020-05-15T14:24:34.000Z" itemprop="datePublished">2020-05-15</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/15/Basic-IO-In-Linux/">Basic IO In Linux</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="File-IO"><a href="#File-IO" class="headerlink" title="File IO"></a>File IO</h1><h2 id="Header"><a href="#Header" class="headerlink" title="Header"></a>Header</h2><hr>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;fcnt.h&gt;</span></span></span><br></pre></td></tr></table></figure>
-<h2 id="Category"><a href="#Category" class="headerlink" title="Category"></a>Category</h2><hr>
-<p><a href="#open">open</a></p>
-<p><a href="#creat">creat</a></p>
-<p><a href="#close">close</a></p>
-<p><a href="#lseek">lseek</a></p>
-<p><a href="#read">read</a></p>
-<p><a href="#write">write</a></p>
-<p><a href="#code">code</a></p>
-<h2 id="open"><a href="#open" class="headerlink" title="open"></a>open</h2><hr>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Opens a file and return it's file descriptor</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">open</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span>* pathname,<span class="keyword">int</span> oflag,...)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">args:</span></span><br><span class="line">    - pathname: file path name</span><br><span class="line">    - oflag:</span><br><span class="line">        - O_RDONLY: read only</span><br><span class="line">        - O_WRONLY: write only</span><br><span class="line">        - RDWR: write <span class="keyword">and</span> read</span><br><span class="line">        - O_APPEND: appends to file end</span><br><span class="line">        - O_CREAT: <span class="keyword">if</span> file <span class="keyword">not</span> exist, creates a <span class="keyword">new</span> one</span><br><span class="line">        - O_EXCL: Test wether a file exist <span class="keyword">or</span> <span class="keyword">not</span>, <span class="keyword">if</span> <span class="keyword">not</span> atomaicly creates a file</span><br><span class="line">        - O_TRUNC: I dont know</span><br><span class="line">        - O_NOCTTY: I dont know</span><br><span class="line">        - O_NONBLOCK: If ptahname is a FIFO <span class="keyword">or</span> a block, <span class="built_in">set</span> the file to a nonblocking status.</span><br><span class="line"><span class="keyword">return</span>:</span><br><span class="line">    successed: The file descriptor</span><br><span class="line">    error: <span class="number">-1</span> <span class="keyword">and</span> errno sets to appropriately</span><br></pre></td></tr></table></figure>
-<h2 id="creat"><a href="#creat" class="headerlink" title="creat"></a>creat</h2><hr>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//creats a file</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">creat</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span>* pathname,<span class="keyword">mode_t</span> mode)</span></span>;</span><br><span class="line"></span><br><span class="line">args:</span><br><span class="line">    - pathname: The file pathname</span><br><span class="line">    - mode:</span><br><span class="line">        - O_RDONLY: read only</span><br><span class="line">        - O_WRONLY: write only</span><br><span class="line">        - RDWR: write <span class="keyword">and</span> read</span><br><span class="line">        - O_APPEND: appends to file end</span><br><span class="line">        - O_CREATE: <span class="keyword">if</span> file <span class="keyword">not</span> exist, creates a <span class="keyword">new</span> one</span><br><span class="line">        - O_EXCL: Test wether a file exist <span class="keyword">or</span> <span class="keyword">not</span>, <span class="keyword">if</span> <span class="keyword">not</span> atomaicly creates a file</span><br><span class="line">        - O_TRUNC: I dont know</span><br><span class="line">        - O_NOCTTY: I dont know</span><br><span class="line">        - O_NONBLOCK: If ptahname is a FIFO <span class="keyword">or</span> a block, <span class="built_in">set</span> the file to a nonblocking status.</span><br><span class="line"><span class="keyword">return</span>:</span><br><span class="line">    successed: The file descriptor</span><br><span class="line">    error: <span class="number">-1</span> <span class="keyword">and</span> errno sets to appropriately.</span><br></pre></td></tr></table></figure>
-<h2 id="close"><a href="#close" class="headerlink" title="close"></a>close</h2><hr>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//close a file</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">close</span><span class="params">(<span class="keyword">int</span> fildes)</span></span>;</span><br><span class="line"></span><br><span class="line">args:</span><br><span class="line">    - fildes: The file descriptor</span><br><span class="line"><span class="keyword">return</span>:</span><br><span class="line">    - successed: <span class="number">0</span></span><br><span class="line">    - error: <span class="number">-1</span> <span class="keyword">and</span> errno sets to appropriately.</span><br></pre></td></tr></table></figure>
-<h2 id="lseek"><a href="#lseek" class="headerlink" title="lseek"></a>lseek</h2><hr>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">off_t</span> <span class="title">lseek</span><span class="params">(<span class="keyword">int</span> fildes,<span class="keyword">off_t</span> offset,<span class="keyword">int</span> whence)</span></span>;</span><br><span class="line"></span><br><span class="line">args:</span><br><span class="line">    - fildes: The file descriptor.</span><br><span class="line">    - offset: The offset.</span><br><span class="line">    - whence:</span><br><span class="line">        -SEEK_SET: The distance between file begin <span class="keyword">and</span> offset.</span><br><span class="line">        -SEEK_END: Set the offset to file end add offset.</span><br><span class="line">        -SEEK_CUR: Set the offset to current value add offset.</span><br><span class="line"><span class="keyword">return</span>:</span><br><span class="line">    successed: The <span class="keyword">new</span> location of file.</span><br><span class="line">    error: <span class="number">-1</span> <span class="keyword">and</span> errno sets to appropriately.</span><br></pre></td></tr></table></figure>
-<h2 id="read"><a href="#read" class="headerlink" title="read"></a>read</h2><hr>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">ssize_t</span> <span class="title">read</span><span class="params">(<span class="keyword">int</span> fildes, <span class="keyword">void</span>* buff, <span class="keyword">size_t</span> nbytes)</span></span>;</span><br><span class="line"></span><br><span class="line">args:</span><br><span class="line">    - fildes: The file descriptor</span><br><span class="line">    - buff: The buffer to store data</span><br><span class="line">    - nbytes: Read how many bytes.</span><br><span class="line"><span class="keyword">return</span>:</span><br><span class="line">    successed:</span><br><span class="line">        - meets EOF: <span class="number">0</span></span><br><span class="line">        - The bytes of read.</span><br><span class="line">    error: <span class="number">-1</span> <span class="keyword">and</span> errno sets to appropriately.</span><br></pre></td></tr></table></figure>
-<h2 id="write"><a href="#write" class="headerlink" title="write"></a>write</h2><hr>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">ssize_t</span> <span class="title">write</span><span class="params">(<span class="keyword">int</span> fildes,<span class="keyword">const</span> <span class="keyword">void</span> *buff, <span class="keyword">size_t</span> nbytes)</span></span>;</span><br><span class="line"></span><br><span class="line">args:</span><br><span class="line">    - fildes: The file descriptor</span><br><span class="line">    - buff: The write buffer</span><br><span class="line">    - nbytes: How many bytes to write</span><br><span class="line"><span class="keyword">return</span>:</span><br><span class="line">    successed: The bytes of write</span><br><span class="line">    error: <span class="number">-1</span> <span class="keyword">and</span> errno sets appropriately</span><br></pre></td></tr></table></figure>
-<h2 id="code"><a href="#code" class="headerlink" title="code"></a>code</h2><hr>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//package your own io functions</span></span><br><span class="line"><span class="comment">//io.h</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> __BEE_IO_H</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> __BEE_IO_H</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">"utils.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">"macro.h"</span></span></span><br><span class="line"><span class="keyword">namespace</span> bee&#123;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *@brief: opens a file, if not exist creats it.</span></span><br><span class="line"><span class="comment"> *@param[in] pathname: the file pathname</span></span><br><span class="line"><span class="comment"> *@param[in] ofalgs: The file open mode, default by creat and write and read.</span></span><br><span class="line"><span class="comment"> *@reurn: The file descriptor.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Open</span><span class="params">(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span>&amp; pathname,<span class="keyword">int</span> oflags=<span class="number">0</span>,<span class="keyword">mode_t</span> mode=<span class="number">0</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *@brief: creats a file.</span></span><br><span class="line"><span class="comment"> *@param[in] pathname: the file pathname</span></span><br><span class="line"><span class="comment"> *@param[in] ofalgs: The file open mode, default by creat and write and read.</span></span><br><span class="line"><span class="comment"> *@return: The file descriptor.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Creat</span><span class="params">(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span>&amp; pathname, <span class="keyword">mode_t</span> mode=O_CREAT|O_RDWR)</span></span>;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *@brief: close a file.</span></span><br><span class="line"><span class="comment"> *@param[in] fd: the file descriptor</span></span><br><span class="line"><span class="comment"> *@return: NULL.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Close</span><span class="params">(<span class="keyword">int</span> fd)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Lseek</span><span class="params">(<span class="keyword">int</span> fd,<span class="keyword">off_t</span> offset,<span class="keyword">int</span> whence=SEEK_SET)</span></span>;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *@brief: read a file.</span></span><br><span class="line"><span class="comment"> *@param[in] fd: the file descriptor</span></span><br><span class="line"><span class="comment"> *@return: The file contains string..</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="built_in">std</span>::<span class="built_in">string</span> <span class="title">Read</span><span class="params">(<span class="keyword">int</span> fd)</span></span>;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> *@brief: write a file.</span></span><br><span class="line"><span class="comment"> *@param[in] fd: the file descriptor</span></span><br><span class="line"><span class="comment"> *@param[in] buffer: The string to write</span></span><br><span class="line"><span class="comment"> *@return: NULL.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Write</span><span class="params">(<span class="keyword">int</span> fd,<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span>&amp; buffer)</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//packages your own io functions</span></span><br><span class="line"><span class="comment">//io.cc</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">"io.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="keyword">namespace</span> bee&#123;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> BUFF_SIZE 8192</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Open</span><span class="params">(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span>&amp; pathname,<span class="keyword">int</span> oflags,<span class="keyword">mode_t</span> mode)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fd;</span><br><span class="line">    <span class="keyword">if</span>(access(pathname.c_str(),F_OK)!=<span class="number">0</span>)&#123;</span><br><span class="line">        fd=open(pathname.c_str(),O_CREAT|O_RDWR|O_TRUNC,<span class="number">0777</span>);</span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span>&lt;&lt;<span class="string">"creats a new file in: "</span>&lt;&lt;pathname&lt;&lt;<span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(oflags==<span class="number">0</span> &amp;&amp; mode==<span class="number">0</span>)&#123;</span><br><span class="line">        fd=open(pathname.c_str(),O_RDWR|O_APPEND);</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        fd=open(pathname.c_str(),oflags,mode);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(fd==<span class="number">-1</span>)&#123;</span><br><span class="line">        ASSERT_DESC(<span class="literal">false</span>,<span class="string">"open file error!"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> fd;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Creat</span><span class="params">(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span>&amp; pathname, <span class="keyword">mode_t</span> mode)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fd=creat(pathname.c_str(),mode);</span><br><span class="line">    <span class="keyword">if</span>(fd==<span class="number">-1</span>)&#123;</span><br><span class="line">        ASSERT_DESC(<span class="literal">false</span>,<span class="string">"creat file error!"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> fd;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Close</span><span class="params">(<span class="keyword">int</span> fd)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(close(fd)==<span class="number">-1</span>)&#123;</span><br><span class="line">        ASSERT_DESC(<span class="literal">false</span>,<span class="string">"close file error!"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Lseek</span><span class="params">(<span class="keyword">int</span> fd,<span class="keyword">off_t</span> offset,<span class="keyword">int</span> whence)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="built_in">std</span>::<span class="built_in">string</span> <span class="title">Read</span><span class="params">(<span class="keyword">int</span> fd)</span></span>&#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">string</span> str=<span class="string">""</span>;</span><br><span class="line">   <span class="keyword">int</span> n=<span class="number">1</span>;</span><br><span class="line">   <span class="keyword">char</span> buf[BUFF_SIZE];</span><br><span class="line">   lseek(fd,<span class="number">0</span>,SEEK_SET);</span><br><span class="line">   <span class="keyword">while</span>(n)&#123;</span><br><span class="line">        n=read(fd,buf,BUFF_SIZE);</span><br><span class="line">        <span class="keyword">if</span>(n==<span class="number">-1</span>)&#123;</span><br><span class="line">            ASSERT_DESC(<span class="literal">false</span>,<span class="string">"read file error!"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="built_in">std</span>::<span class="built_in">string</span> <span class="title">tmp</span><span class="params">(buf)</span></span>;</span><br><span class="line">        str.append(tmp);</span><br><span class="line">        bzero(buf,BUFF_SIZE);</span><br><span class="line">   &#125;</span><br><span class="line">   lseek(fd,<span class="number">0</span>,SEEK_END);</span><br><span class="line">   <span class="keyword">return</span> str;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Write</span><span class="params">(<span class="keyword">int</span> fd,<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span>&amp; buffer)</span></span>&#123;</span><br><span class="line">    <span class="comment">//char buf[]="";</span></span><br><span class="line">    <span class="keyword">int</span> len=buffer.size();</span><br><span class="line">    <span class="comment">//strncpy(buf,buffer.c_str(),len+1);</span></span><br><span class="line">    <span class="keyword">if</span>(write(fd,buffer.c_str(),len)!=len)&#123;</span><br><span class="line">        ASSERT_DESC(<span class="literal">false</span>,<span class="string">"write file error!"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/15/Basic-IO-In-Linux/" data-id="cka8b3cie0000okv6cml82a2f" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -992,7 +1032,7 @@ void str_echo(int sockfd){
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/C/" style="font-size: 13.33px;">C++</a> <a href="/tags/Cracking-the-Coding-Interview/" style="font-size: 10px;">Cracking the Coding Interview</a> <a href="/tags/Data-Structure/" style="font-size: 13.33px;">Data Structure</a> <a href="/tags/Introduce-To-Algorithm/" style="font-size: 16.67px;">Introduce To Algorithm</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/network/" style="font-size: 10px;">network</a> <a href="/tags/%E9%9D%A2%E8%AF%95/" style="font-size: 10px;">面试</a>
+      <a href="/tags/C/" style="font-size: 15px;">C++</a> <a href="/tags/Cracking-the-Coding-Interview/" style="font-size: 10px;">Cracking the Coding Interview</a> <a href="/tags/Data-Structure/" style="font-size: 15px;">Data Structure</a> <a href="/tags/Introduce-To-Algorithm/" style="font-size: 20px;">Introduce To Algorithm</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/network/" style="font-size: 10px;">network</a> <a href="/tags/%E9%9D%A2%E8%AF%95/" style="font-size: 10px;">面试</a>
     </div>
   </div>
 
@@ -1014,6 +1054,10 @@ void str_echo(int sockfd){
       <ul>
         
           <li>
+            <a href="/2020/05/30/Radix-Sort/">Radix Sort</a>
+          </li>
+        
+          <li>
             <a href="/2020/05/30/Letters-and-Numbers/">17.05 Letters and Numbers</a>
           </li>
         
@@ -1027,10 +1071,6 @@ void str_echo(int sockfd){
         
           <li>
             <a href="/2020/05/26/Quick-Sort/">Quick Sort</a>
-          </li>
-        
-          <li>
-            <a href="/2020/05/24/Heap-Sort/">Heap-Sort</a>
           </li>
         
       </ul>

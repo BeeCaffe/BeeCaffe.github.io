@@ -64,6 +64,49 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Radix-Sort" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/05/30/Radix-Sort/" class="article-date">
+  <time datetime="2020-05-30T02:57:36.000Z" itemprop="datePublished">2020-05-30</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/30/Radix-Sort/">Radix Sort</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Radix sort is an ancient sorting algorithm, which is uesed in card sorting machines. The basic idea of radix sort is sorting by each bits in the numbers from ones to the highest bits. Because different number has different bits, we fill the short number with zero, then sorting the numbers from lowest bits to highest bits.</p>
+<p>There is an sample example about radix sort:</p>
+<p><img src="/images/13.jpg" alt="radix_sort"></p>
+<p>Each bits sorting process can be tackled by <strong>count sort</strong>, which you can refer to <a href="https://beecaffe.github.io/2020/05/28/Count-Sort/" target="_blank" rel="noopener">count sort</a>. And the time complexity is <strong>O(d(n+k))</strong>, where <strong>d</strong> is the bit number, <strong>n</strong> is the number of data, <strong>k</strong> is 10.</p>
+<h3 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">count_sort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;<span class="built_in">array</span>,<span class="keyword">int</span> bits)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n=<span class="built_in">array</span>.size();</span><br><span class="line">    <span class="function"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; <span class="title">countArray</span><span class="params">(<span class="number">10</span>,<span class="number">0</span>)</span></span>;</span><br><span class="line">    <span class="function"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; <span class="title">outputArray</span><span class="params">(n,<span class="number">0</span>)</span></span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;++i)&#123;</span><br><span class="line">        countArray[(<span class="built_in">array</span>[i]/bits)%<span class="number">10</span>]++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;<span class="number">10</span>;++i)&#123;</span><br><span class="line">        countArray[i]+=countArray[i<span class="number">-1</span>];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;n;++i)&#123;</span><br><span class="line">        outputArray[countArray[(<span class="built_in">array</span>[i]/bits)%<span class="number">10</span>]]=<span class="built_in">array</span>[i];</span><br><span class="line">        countArray[(<span class="built_in">array</span>[i]/bits)%<span class="number">10</span>]--;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">array</span>=outputArray;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">get_max</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;<span class="built_in">array</span>)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> ret=INT32_MIN;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">auto</span> i:<span class="built_in">array</span>) ret=max(ret,i);</span><br><span class="line">    <span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">radix_sort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; &amp;<span class="built_in">array</span>)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> bits=<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> max=get_max(<span class="built_in">array</span>);</span><br><span class="line">    <span class="keyword">for</span>(;max/bits&gt;<span class="number">0</span>;bits*=<span class="number">10</span>)&#123;</span><br><span class="line">        count_sort(<span class="built_in">array</span>,bits);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; <span class="built_in">array</span>=&#123;<span class="number">329</span>,<span class="number">457</span>,<span class="number">657</span>,<span class="number">839</span>,<span class="number">436</span>,<span class="number">720</span>,<span class="number">355</span>&#125;;</span><br><span class="line">    radix_sort(<span class="built_in">array</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">auto</span> i:<span class="built_in">array</span>) <span class="built_in">cout</span>&lt;&lt;i&lt;&lt;<span class="string">" "</span>;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/05/30/Radix-Sort/" data-id="ckatm8im500002ov6hk6p1yiw" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Introduce-To-Algorithm/" rel="tag">Introduce To Algorithm</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Letters-and-Numbers" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/05/30/Letters-and-Numbers/" class="article-date">
@@ -897,109 +940,6 @@ The time complexity of build heap is O(n), more detail about the time complexity
 
 
   
-    <article id="post-Variable-Arguments-In-C" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/15/Variable-Arguments-In-C/" class="article-date">
-  <time datetime="2020-05-15T14:33:34.000Z" itemprop="datePublished">2020-05-15</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/15/Variable-Arguments-In-C/">Variable Arguments In C++</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1-what-is-variable-arguments"><a href="#1-what-is-variable-arguments" class="headerlink" title="1. what is variable arguments?"></a>1. what is variable arguments?</h2><p>In C\C++ program we always need some functions which arguments number are variable, such as <strong>printf()</strong> and <strong>scanf()</strong>. We called those function as variable arguments function and we use placeholder <strong>…</strong> to represent the uncertained[1]. arguments.</p>
-<pre><code>int printf(const char* fmt, ...);
-int scanf(const char* fmt, ...);
-</code></pre><p>And, there is an simple example of variable arguments:</p>
-<pre><code>#include &lt;iostream&gt;
-#include &lt;cstdarg&gt;
-
-/*
- * @brief : The purpose of this function is to print any number of integer,
- * @param[in] count : The number of int you suppose to print.
- * @param[in] ... : variable arguments.
- */
-int print_args(int count, ...){
-    int i,value;
-    //// the pointer of arguments address
-    va_list arg_ptr;
-    //// get address of first argument
-    va_start(arg_ptr, count);
-    for(int i=0; i&lt;count; ++i){
-        //// get the next argument address
-        value = va_arg(arg_ptr,int);
-        printf(&quot;position %d=%d\n&quot;,i+1,value);
-    }
-    //// set arg_ptr yo 0
-    va_end(arg_ptr);
-}
-
-int main() {
-    print_args(5,1,2,3,4,5);
-    return 0;
-}
-</code></pre><h2 id="2-The-macros-of-va-list-va-start-va-arg-and-va-end"><a href="#2-The-macros-of-va-list-va-start-va-arg-and-va-end" class="headerlink" title="2. The macros of va_list, va_start, va_arg and va_end"></a>2. The macros of va_list, va_start, va_arg and va_end</h2><p>Those types are used as parameters for the macros defined in <cstdarg> to retrieve the additional arguments of a function[2].</p>
-<p><strong>va_list</strong> The type to hold information about variable arguments [2].</p>
-<p><strong>va_start(va_list,paramN)</strong> Initialize a variable argument list. Initailizes <strong>va_list</strong> type pointer to retrieve the additional arguments after paramN[2].</p>
-<p><strong>va_arg(va_list, type)</strong> Retrieve next argument.</p>
-<p><strong>va_end(va_list)</strong> End using variable argument list, set va_list type argument to nullptr.</p>
-<p>We can illustrate the upper for loop as the following picture:</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/13348038-c8913e90783c0b8f.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="va_list.jpg"><br>45B0883250139C6D9A27)</p>
-<p>when we call <strong>va_start(arg_ptr,count)</strong>, the arg_ptr has been set to the start address of variable arguments list. Then, the <strong>va_arg(arg_ptr,int)</strong> function move the arg_ptr pointer. In the end, we set arg_ptr to zero.</p>
-<h2 id="3-vsprintf-char-str-const-char-format-va-list-arg"><a href="#3-vsprintf-char-str-const-char-format-va-list-arg" class="headerlink" title="3. vsprintf(char str, const char format, va_list arg)"></a>3. vsprintf(char<em> str, const char</em> format, va_list arg)</h2><p>There is a utilization of variable arguments or said va_list, that is function <strong>vsprintf()</strong>, this function is able to print variable arguments in a suitable format.</p>
-<p><strong> str </strong> the char* pointer, point to char[] where we suppose to print.</p>
-<p><strong>format</strong> the contorl format of string, such as “%d,%f,%n” …</p>
-<p><strong>arg</strong> va_list type argument which points to the start position of variable arguments list.</p>
-<p>There is a example to utilize va_list and vsprintf()<strong>[3]</strong> :</p>
-<pre><code>#include&lt;stdio.h&gt;
-#include&lt;stdarg.h&gt;
-char buffer[80];
-int vspfunc(char* format, ...){
-    va_list arg;
-    int ans;
-    va_start(arg,format);
-    ans = vsprintf(buffer,format,arg);
-    va_end(arg);
-    return ans;
-}
-
-int main(){
-    int i = 5;
-    float f = 27.0;
-    char str[50] = &quot;runoob.com&quot;;
-    vspfunc(&quot;%d %f %s&quot;,i,f,str);
-    printf(&quot;%s\n&quot;,buffer);
-    return 0;
-}
-</code></pre><h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>[1] <a href="https://www.cnblogs.com/zlcxbb/p/6802895.html" target="_blank" rel="noopener">https://www.cnblogs.com/zlcxbb/p/6802895.html</a><br>[2] <a href="http://www.cplusplus.com/reference/cstdarg/va_list/" target="_blank" rel="noopener">http://www.cplusplus.com/reference/cstdarg/va_list/</a><br>[3] <a href="https://www.runoob.com/cprogramming/c-function-vsprintf.html" target="_blank" rel="noopener">https://www.runoob.com/cprogramming/c-function-vsprintf.html</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/15/Variable-Arguments-In-C/" data-id="cka8b3cj6000wokv6513bc4az" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/" rel="tag">C++</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -1028,7 +968,7 @@ int main(){
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/C/" style="font-size: 13.33px;">C++</a> <a href="/tags/Cracking-the-Coding-Interview/" style="font-size: 10px;">Cracking the Coding Interview</a> <a href="/tags/Data-Structure/" style="font-size: 13.33px;">Data Structure</a> <a href="/tags/Introduce-To-Algorithm/" style="font-size: 16.67px;">Introduce To Algorithm</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/network/" style="font-size: 10px;">network</a> <a href="/tags/%E9%9D%A2%E8%AF%95/" style="font-size: 10px;">面试</a>
+      <a href="/tags/C/" style="font-size: 15px;">C++</a> <a href="/tags/Cracking-the-Coding-Interview/" style="font-size: 10px;">Cracking the Coding Interview</a> <a href="/tags/Data-Structure/" style="font-size: 15px;">Data Structure</a> <a href="/tags/Introduce-To-Algorithm/" style="font-size: 20px;">Introduce To Algorithm</a> <a href="/tags/Linux/" style="font-size: 20px;">Linux</a> <a href="/tags/network/" style="font-size: 10px;">network</a> <a href="/tags/%E9%9D%A2%E8%AF%95/" style="font-size: 10px;">面试</a>
     </div>
   </div>
 
@@ -1050,6 +990,10 @@ int main(){
       <ul>
         
           <li>
+            <a href="/2020/05/30/Radix-Sort/">Radix Sort</a>
+          </li>
+        
+          <li>
             <a href="/2020/05/30/Letters-and-Numbers/">17.05 Letters and Numbers</a>
           </li>
         
@@ -1063,10 +1007,6 @@ int main(){
         
           <li>
             <a href="/2020/05/26/Quick-Sort/">Quick Sort</a>
-          </li>
-        
-          <li>
-            <a href="/2020/05/24/Heap-Sort/">Heap-Sort</a>
           </li>
         
       </ul>
