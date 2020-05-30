@@ -78,7 +78,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/30/Letters-and-Numbers/">Letters and Numbers</a>
+      <a class="article-title" href="/2020/05/30/Letters-and-Numbers/">17.05 Letters and Numbers</a>
     </h1>
   
 
@@ -88,7 +88,7 @@
       
         <p><strong>prefix</strong>: the prefix in an array is a subarray whose length is less than or equal to the length of the array from left to right;</p>
 <p><strong>prefix sum</strong> : the sum of the prefix subarray of an array;</p>
-<p><img src="https://pic.leetcode-cn.com/55450de6bc291cbfb81fd3b47d95d60fc56cb4e5d27899ac83ac4ddcc9632211-12.jpg" alt="12.JPG"></p>
+<p><img src="/images/12.jpg" alt="12.JPG"></p>
 <p>The general idea is as follows:</p>
 <ul>
 <li><p>since there are only <strong>letter</strong> and <strong>number</strong> in the array, we can write <strong>letter</strong> as -1 and <strong>number</strong> as 1 to simplify the problem.</p>
@@ -109,10 +109,10 @@
 </li>
 </ul>
 <p>So let’s convert the array to -1 and 1, and figure out all the prefixes and the values of the array;</p>
-<p><img src="https://pic.leetcode-cn.com/53d50d4e8c49a12763fc9cbd6b9693b4b0ccded74c834c606e3d0f088a5d65b9-10.jpg" alt="10.JPG"></p>
+<p><img src="/images/10.jpg" alt="10.JPG"></p>
 <p>Then, we walk through the prefix and array once, and use a mapping (dictionary) inordered_map to record the value of the prefix and its leftmost subscript;</p>
 <p>Every time we find the prefix and/or the prefix and/or the prefix and/or the sum in the previous example, we update the answer according to the rule.</p>
-<p><img src="https://pic.leetcode-cn.com/16b0e83601c5fbad18778c2a3d635150c4eae4dac1e77a38ce1b44106064be8d-11.jpg" alt="11.JPG"></p>
+<p><img src="/images/11.jpg" alt="11.JPG"></p>
 <p>As shown in the figure above, the answer to the example given in the question is a subarray from the first prefix and the position of 1 to the last prefix and the position of 1.</p>
 <h3 id="Time-Space"><a href="#Time-Space" class="headerlink" title="Time/Space"></a>Time/Space</h3><p>Time: O (n)</p>
 <p>Space: O (n)</p>
@@ -1050,7 +1050,7 @@ int main(){
       <ul>
         
           <li>
-            <a href="/2020/05/30/Letters-and-Numbers/">Letters and Numbers</a>
+            <a href="/2020/05/30/Letters-and-Numbers/">17.05 Letters and Numbers</a>
           </li>
         
           <li>
