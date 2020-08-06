@@ -2,16 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://yoursite.com/2020/05/30/Radix-Sort/</loc>
+    <loc>http://yoursite.com/2020/05/15/TCP-Three-Way-Handshake/</loc>
     
-    <lastmod>2020-05-30T12:32:30.881Z</lastmod>
+    <lastmod>2020-08-06T07:08:30.842Z</lastmod>
     
   </url>
   
   <url>
     <loc>http://yoursite.com/2020/05/30/Letters-and-Numbers/</loc>
     
-    <lastmod>2020-05-30T02:32:44.928Z</lastmod>
+    <lastmod>2020-05-30T12:37:08.044Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2020/05/30/Radix-Sort/</loc>
+    
+    <lastmod>2020-05-30T12:32:30.881Z</lastmod>
     
   </url>
   
@@ -82,13 +89,6 @@
     <loc>http://yoursite.com/2020/05/15/Install-Boost-In-Linux/</loc>
     
     <lastmod>2020-05-15T14:32:57.744Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2020/05/15/TCP-Three-Way-Handshake/</loc>
-    
-    <lastmod>2020-05-15T14:32:04.416Z</lastmod>
     
   </url>
   

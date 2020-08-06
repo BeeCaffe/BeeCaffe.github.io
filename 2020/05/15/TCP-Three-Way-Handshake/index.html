@@ -14,16 +14,16 @@
 <meta property="og:site_name" content="BeeCaffe&#39;s Personal Blogs">
 <meta property="og:description" content="1. TCP Header FormatAs is shown in the following picture, the TCP header has 20 Bytes in total.   Port Number: Each TCP segment includes source port number and destination port number, which respectiv">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/13348038-e096bec9fa7edcef.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/13348038-fe57d097a914e27c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/13348038-20a6e02b754a085e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/13348038-ad7f7218e572285e.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://yoursite.com/images/16.jpg">
+<meta property="og:image" content="http://yoursite.com/images/17.jpg">
+<meta property="og:image" content="http://yoursite.com/images/18.jpg">
+<meta property="og:image" content="http://yoursite.com/images/19.jpg">
 <meta property="article:published_time" content="2020-05-15T14:31:35.000Z">
-<meta property="article:modified_time" content="2020-05-15T14:32:04.416Z">
+<meta property="article:modified_time" content="2020-08-06T07:08:30.842Z">
 <meta property="article:author" content="BeeCaffe">
 <meta property="article:tag" content="network">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/13348038-e096bec9fa7edcef.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta name="twitter:image" content="http://yoursite.com/images/16.jpg">
   
     <link rel="alternate" href="/atom.xml" title="BeeCaffe&#39;s Personal Blogs" type="application/atom+xml">
   
@@ -95,7 +95,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h2 id="1-TCP-Header-Format"><a href="#1-TCP-Header-Format" class="headerlink" title="1. TCP Header Format"></a>1. TCP Header Format</h2><p>As is shown in the following picture, the TCP header has 20 Bytes in total.</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/13348038-e096bec9fa7edcef.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<p><img src="/images/16.jpg" alt="16.JPG"></p>
 <ul>
 <li><p><strong>Port Number</strong>: Each TCP segment includes source port number and destination port number, which respectively refers to the TCP segment sender’s and receiver’s address. Notes to mention that, here we utilizes “port” rather than “address”, that is said TCP answer for application layer and itself belong to tranport layer. Meanwhile, the combination of “port” and “IP address” is called socket, which is able to ensure a specific program in a computer. </p>
 </li>
@@ -121,13 +121,13 @@
 </li>
 </ul>
 <h2 id="2-Three-Way-Handshake"><a href="#2-Three-Way-Handshake" class="headerlink" title="2. Three-Way Handshake"></a>2. Three-Way Handshake</h2><p>Three-Way Handshake refers to that the client and server link establish process requires three data package in total.This process is generally raised by client function <strong>connect()</strong>, and the mainly process of three way handshake is shown in the following picture.</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/13348038-fe57d097a914e27c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<p><img src="/images/17.jpg" alt="17.JPG"></p>
 <ul>
 <li><strong>First-Way Handshake</strong>:<br>Client sets SYN bits as 1, that is SYN=1, and randomly generates a sequence value i, that is seq=i, and sends data package to server. After that client changes state to SYN-SENT and waits for the ackknowledgement of server. Meanwhile, server keeps LISTEN state until the data package come in.</li>
 <li><strong>Second-Way Handshake</strong>:<br>Server receive the first package and check the SYN bit. When SYN=1, server knows that client suppose to establish connection with himself. Then the server responds an data package and sets ACK and SYN bit as 1. acknowledgement sequence assigns to i+1, that is ack=i+1, as a respose for first data package. Meanwhile, server also randomly produces a sequence j, that is seq=j, then this package would be send back. After that sever status is setted to SYN-RECV status.</li>
 <li><strong>Three-Way Handshake</strong>:<br>When Client receives the package, it will check the acknowledgement sequence’s value and the ACK bit. If ACK=1 and seq=i+1, it will send the last package of the Three-Way Handshake. The ACK bit also is setted as 1 and the seq=j+1, then this package is sent to server by client. Once this package leaves away client, it state is setted as ESTAB-LISHED which represents that the TCP connection has been established successfully. Then, the client and server can tranfer datas each other.<h2 id="3-Four-Way-Wavehand"><a href="#3-Four-Way-Wavehand" class="headerlink" title="3. Four-Way Wavehand"></a>3. Four-Way Wavehand</h2>Four-Way Wavehand refers to that close a TCP connection require four package between client and server in total. The reson why close a TCP connection needs four package is that TCP connection is a Full Duplex data transfers channel. Thus, client and server must close respectively, called half-close, to avoid loss of data.</li>
 </ul>
-<p><img src="https://upload-images.jianshu.io/upload_images/13348038-20a6e02b754a085e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<p><img src="/images/18.jpg" alt="18.JPG"></p>
 <p>Duing to TCP connection is full duplex data transfers channel, each channel must be closed one by one to avoid loss of data. For example, when Client hasn’t data to transfrom, the client will send a package with FIN=1 to tell Server that I do not send any package, but I can receive package. After the server receives this package, it will response a package to tell client that I know you will not send package anymore, and keep sending package to client util data finish.</p>
 <ul>
 <li><strong>One-Way Wavehand</strong>:<br>Client sends a package with FIN=1, seq=i to colse the data send channel, and then Clinet change to FIN-WAIT1 state.</li>
@@ -142,7 +142,7 @@
 </ul>
 </li>
 </ul>
-<p><img src="https://upload-images.jianshu.io/upload_images/13348038-ad7f7218e572285e.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="cs.jpg"></p>
+<p><img src="/images/19.jpg" alt="19.JPG"></p>
 <pre><code>//Client 
 #include&lt;sys/socket.h&gt;
 #include&lt;time.h&gt;
