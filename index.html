@@ -86,7 +86,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="IO模型"><a href="#IO模型" class="headerlink" title="IO模型"></a>IO模型</h1><p>IO是后台开发中一个很重要的内容，这里以Linux C++的IO为例讲解几种IO模型，Java中的IO底层原理一样。</p>
+        <p>IO是后台开发中一个很重要的内容，这里以Linux C++的IO为例讲解几种IO模型，Java中的IO底层原理一样。</p>
 <h2 id="1-Blocked-IO-（同步阻塞式IO模型）"><a href="#1-Blocked-IO-（同步阻塞式IO模型）" class="headerlink" title="1. Blocked-IO （同步阻塞式IO模型）"></a>1. Blocked-IO （同步阻塞式IO模型）</h2><p>在Blocked-IO中，应用进程会向内核发送recvfrom系统调用来读取数据，当数据未准备好时候，应用进程阻塞等待，直到内核将数据准备好之后并复制到用户间中来后recvfrom系统调用返回，此时应用进程才可以读取数据。</p>
 <p><img src="images/5.jpg" alt=""></p>
 <h2 id="2-NonBlocked-IO（非阻塞IO）"><a href="#2-NonBlocked-IO（非阻塞IO）" class="headerlink" title="2. NonBlocked-IO（非阻塞IO）"></a>2. NonBlocked-IO（非阻塞IO）</h2><p>非阻塞意味着当数据在内核未就绪的时候，进程不会被投入睡眠，而是定期询问（polling）内核是否将数据准备好，这种方式CPU开销较大。</p>
