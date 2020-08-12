@@ -64,6 +64,55 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-IO-模型" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/08/12/IO-%E6%A8%A1%E5%9E%8B/" class="article-date">
+  <time datetime="2020-08-12T08:31:28.000Z" itemprop="datePublished">2020-08-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/08/12/IO-%E6%A8%A1%E5%9E%8B/">IO 模型</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="IO模型"><a href="#IO模型" class="headerlink" title="IO模型"></a>IO模型</h1><p>IO是后台开发中一个很重要的内容，这里以Linux C++的IO为例讲解几种IO模型，Java中的IO底层原理一样。</p>
+<h2 id="1-Blocked-IO-（同步阻塞式IO模型）"><a href="#1-Blocked-IO-（同步阻塞式IO模型）" class="headerlink" title="1. Blocked-IO （同步阻塞式IO模型）"></a>1. Blocked-IO （同步阻塞式IO模型）</h2><p>在Blocked-IO中，应用进程会向内核发送recvfrom系统调用来读取数据，当数据未准备好时候，应用进程阻塞等待，直到内核将数据准备好之后并复制到用户间中来后recvfrom系统调用返回，此时应用进程才可以读取数据。</p>
+<p><img src="images/5.jpg" alt="image"></p>
+<h2 id="2-NonBlocked-IO（非阻塞IO）"><a href="#2-NonBlocked-IO（非阻塞IO）" class="headerlink" title="2. NonBlocked-IO（非阻塞IO）"></a>2. NonBlocked-IO（非阻塞IO）</h2><p>非阻塞意味着当数据在内核未就绪的时候，进程不会被投入睡眠，而是定期询问（polling）内核是否将数据准备好，这种方式CPU开销较大。</p>
+<h3 id="2-1-同步非阻塞IO模型"><a href="#2-1-同步非阻塞IO模型" class="headerlink" title="2.1 同步非阻塞IO模型"></a>2.1 同步非阻塞IO模型</h3><p>在同步非阻塞IO模型中，进程同样会向内核发送recvfrom系统调用，但是当内核数据未准备好的时候内核会返回一个错误，此时进程不进入阻塞状态而是定期轮询，当内核数据准备好并复制到用户空间之后recvfrom返回。</p>
+<p><img src="images/20.jpg" alt="image"></p>
+<h3 id="2-2-IO多路复用模型"><a href="#2-2-IO多路复用模型" class="headerlink" title="2.2 IO多路复用模型"></a>2.2 IO多路复用模型</h3><p>Linux：select（）,poll（），epoll（）<br>IO复用模型中，进程阻塞在select（）或者poll（）两个函数上面，select（）和poll（）函数可以同时监听多个文件（套接字），当其中一个文件IO准备好了之后这两个函数就会返回。此时，用户进程调用recvfrom函数读取数据。</p>
+<p><img src="images/21.jpg" alt="image"></p>
+<h2 id="3-Asynchronous（异步IO）"><a href="#3-Asynchronous（异步IO）" class="headerlink" title="3. Asynchronous（异步IO）"></a>3. Asynchronous（异步IO）</h2><p>异步IO实际上可以理解成为给内核设置回调函数，当内核数据准备好之后执行该回调函数，即用户线程的读取数据过程。异步IO会调用aio_read函数，该函数将描述符，缓冲区指针，缓冲区大小和文件指针传递给内核，传递给内核之后aio_read函数可以直接返回，用户线程可以执行其他任务。当内核数据就绪后，执行回调函数将数据复制到文件缓冲区指针处。</p>
+<p><img src="images/22.jpg" alt="image"></p>
+<h1 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h1><p>之所有分成这么多种IO模型的原因是在网络编程中，数据并非随时都是就绪的，这个时候用户线程需要等待数据的就绪。等待时候采取的策略不同就衍生出来了这几种不同的IO模型，采用不同的IO模型将导致系统的运行效率和用户体验的不同，因此是一个非常基础也非常重要的内容。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/08/12/IO-%E6%A8%A1%E5%9E%8B/" data-id="ckdr4f7o70000wgv68ogfbx9m" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%9D%A2%E8%AF%95/" rel="tag">面试</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-C-面试" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2020/08/06/C-%E9%9D%A2%E8%AF%95/" class="article-date">
@@ -2694,7 +2743,7 @@
 <ul>
 <li><p>since there are only <strong>letter</strong> and <strong>number</strong> in the array, we can write <strong>letter</strong> as -1 and <strong>number</strong> as 1 to simplify the problem.</p>
 </li>
-<li><p>the problem requires the same number of characters and Numbers in the subarray, so we can solve the problem by solving the prefix and. The solution can be divided into two cases:</p>
+<li><p>the problem requires the same number of characters and Numbers in the subarray, so we can solve the problem by solving the prefix and. The solution can be                                                       divided into two cases:</p>
 <ul>
 <li><ol>
 <li>The values of two prefixes and are the same, for example: prefix[I]==prefix[j], indicating that there are the same number of extra digits or characters between [0, I] and [0,j]. Then if we use the interval [0,j] minus the interval [0, I], the number of digits and characters between [I,j] must be the same, so [(I,j] may be a set of solutions (<strong> note that the interval is left open and right closed </strong>);</li>
@@ -2899,7 +2948,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="1-Quick-Sort"><a href="#1-Quick-Sort" class="headerlink" title="1. Quick Sort"></a>1. Quick Sort</h3><p>For each time, we ensure one numbers location in the whole array, which we called <strong>key value</strong>, then, we put the numbers which smaller than key value into the left of it, and the bigger number to the right of key value.</p>
+        <h3 id="1-Quick-Sort"><a href="#1-Quick-Sort" class="headerlink" title="1. Quick Sort"></a>1. Quick Sort</h3><p>For each time, we ensure one nuhexo     mbers location in the whole array, which we called <strong>key value</strong>, then, we put the numbers which smaller than key value into the left of it, and the bigger number to the right of key value.</p>
 <p>After that, we recurrently ensure the left numbers order and the right numbers order until the whole array are sorted.The following picture shows a simple example of quickly sort.</p>
 <p><img src="https://upload-images.jianshu.io/upload_images/13348038-4b3fb69926be987e.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="quick_sort.jpg"></p>
 <p>At the start of this program, <strong>low=0</strong> and <strong>high=5</strong>, we choose the first number of the range of [low,high], and use a variable <strong>key=arr[low]=7</strong> to record this number. Then we find that arr[high]=2 &lt; 7, which means we must change the high index number to key value left. As a result for we have recorded the arr[low] in<strong> key</strong>, we set arr[low]=arr[high].</p>
@@ -3386,50 +3435,6 @@ The time complexity of build heap is O(n), more detail about the time complexity
 
 
   
-    <article id="post-Throw-Exception-In-Constructor-And-Destructor" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2020/05/15/Throw-Exception-In-Constructor-And-Destructor/" class="article-date">
-  <time datetime="2020-05-15T14:35:57.000Z" itemprop="datePublished">2020-05-15</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/05/15/Throw-Exception-In-Constructor-And-Destructor/">Throw Exception In Constructor And Destructor</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="What-will-happen-if-throw-a-exception-in-constructor"><a href="#What-will-happen-if-throw-a-exception-in-constructor" class="headerlink" title="What will happen if throw a exception in constructor?"></a>What will happen if throw a exception in constructor?</h2><ul>
-<li><strong>Conculsion</strong>: Throwing an exception in constructor may case two problem:<br>(1) The destructor of this Class can not be called;<br>(2) Memory leaky;</li>
-<li><strong>Explain</strong>:<br>As the following code, class ObjectA is a base class which is inherient by class Normal.Meanwhile, there is also another class, class Evil, which has throwed an exception in constructor. Class Normal has a member variable of Class Evil. In the constructor of Class Normal, when the constructor is called, there are four member should be constrcut, their are  m_a,m_evil,m_resource and m_value in Class ObjectA. In Class Normal, m_a,m_resource and m_value have been constructed correctly, however when compile attempts to construct m_evil, there has throwed and exception.It cause the construction of Class Normal has been stopped, thus, Class Normal’s destructor can not be called correctly and m_resource can not be delete. So, there is a memory leaky in this code.</li>
-<li><strong>Code</strong>:<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio.h&gt;</span><br><span class="line">using namespace std;</span><br><span class="line">class ObjectA&#123;</span><br><span class="line">    public:</span><br><span class="line">        explicit ObjectA(int a):m_value(new int(a))&#123;&#125;</span><br><span class="line">    private:</span><br><span class="line">        int *m_value;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;Throw a exception in Class Evil</span><br><span class="line">class Evil&#123;</span><br><span class="line">    public:</span><br><span class="line">        Evil()&#123;throw 10;&#125;;</span><br><span class="line">        ~Evil()&#123;&#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;destructor can not be called, and m_resource can not be delete, which causes memory leaky.</span><br><span class="line">class Normal:public ObjectA&#123;</span><br><span class="line">    public:</span><br><span class="line">        explicit Normal(int a):ObjectA(a), m_a(a+1),m_resource(new int(a+2))&#123;&#125;</span><br><span class="line">        ~Normal()&#123;delete m_resource;&#125;</span><br><span class="line">    private:</span><br><span class="line">        ObjectA m_a;</span><br><span class="line">        Evil m_evil;</span><br><span class="line">        int *m_resource;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">static void hasMemoryLeak()&#123;</span><br><span class="line">    try&#123;</span><br><span class="line">        Normal n(1);</span><br><span class="line">    &#125;catch(...)&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main()&#123;</span><br><span class="line">    hasMemoryLeak();</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2020/05/15/Throw-Exception-In-Constructor-And-Destructor/" data-id="cka8b3ciz000nokv6e6yc7lji" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/" rel="tag">C++</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -3480,6 +3485,10 @@ The time complexity of build heap is O(n), more detail about the time complexity
       <ul>
         
           <li>
+            <a href="/2020/08/12/IO-%E6%A8%A1%E5%9E%8B/">IO 模型</a>
+          </li>
+        
+          <li>
             <a href="/2020/08/06/C-%E9%9D%A2%E8%AF%95/">C++基础知识</a>
           </li>
         
@@ -3493,10 +3502,6 @@ The time complexity of build heap is O(n), more detail about the time complexity
         
           <li>
             <a href="/2020/05/28/Count-Sort/">Count Sort</a>
-          </li>
-        
-          <li>
-            <a href="/2020/05/27/%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1IPC/">进程间通信IPC</a>
           </li>
         
       </ul>
