@@ -19,7 +19,7 @@
 <meta property="og:image" content="http://yoursite.com/2020/08/12/IO-%E6%A8%A1%E5%9E%8B/images/21.jpg">
 <meta property="og:image" content="http://yoursite.com/2020/08/12/IO-%E6%A8%A1%E5%9E%8B/images/22.jpg">
 <meta property="article:published_time" content="2020-08-12T08:31:28.000Z">
-<meta property="article:modified_time" content="2020-08-12T08:37:37.064Z">
+<meta property="article:modified_time" content="2020-08-12T08:39:39.491Z">
 <meta property="article:author" content="BeeCaffe">
 <meta property="article:tag" content="面试">
 <meta name="twitter:card" content="summary">
@@ -96,14 +96,14 @@
       
         <h1 id="IO模型"><a href="#IO模型" class="headerlink" title="IO模型"></a>IO模型</h1><p>IO是后台开发中一个很重要的内容，这里以Linux C++的IO为例讲解几种IO模型，Java中的IO底层原理一样。</p>
 <h2 id="1-Blocked-IO-（同步阻塞式IO模型）"><a href="#1-Blocked-IO-（同步阻塞式IO模型）" class="headerlink" title="1. Blocked-IO （同步阻塞式IO模型）"></a>1. Blocked-IO （同步阻塞式IO模型）</h2><p>在Blocked-IO中，应用进程会向内核发送recvfrom系统调用来读取数据，当数据未准备好时候，应用进程阻塞等待，直到内核将数据准备好之后并复制到用户间中来后recvfrom系统调用返回，此时应用进程才可以读取数据。</p>
-<p><img src="images/5.jpg" alt="image"></p>
+<p><img src="images/5.jpg" alt=""></p>
 <h2 id="2-NonBlocked-IO（非阻塞IO）"><a href="#2-NonBlocked-IO（非阻塞IO）" class="headerlink" title="2. NonBlocked-IO（非阻塞IO）"></a>2. NonBlocked-IO（非阻塞IO）</h2><p>非阻塞意味着当数据在内核未就绪的时候，进程不会被投入睡眠，而是定期询问（polling）内核是否将数据准备好，这种方式CPU开销较大。</p>
 <h3 id="2-1-同步非阻塞IO模型"><a href="#2-1-同步非阻塞IO模型" class="headerlink" title="2.1 同步非阻塞IO模型"></a>2.1 同步非阻塞IO模型</h3><p>在同步非阻塞IO模型中，进程同样会向内核发送recvfrom系统调用，但是当内核数据未准备好的时候内核会返回一个错误，此时进程不进入阻塞状态而是定期轮询，当内核数据准备好并复制到用户空间之后recvfrom返回。</p>
-<p><img src="images/20.jpg" alt="image"></p>
+<p><img src="images/20.jpg" alt=""></p>
 <h3 id="2-2-IO多路复用模型"><a href="#2-2-IO多路复用模型" class="headerlink" title="2.2 IO多路复用模型"></a>2.2 IO多路复用模型</h3><p>Linux：select（）,poll（），epoll（）<br>IO复用模型中，进程阻塞在select（）或者poll（）两个函数上面，select（）和poll（）函数可以同时监听多个文件（套接字），当其中一个文件IO准备好了之后这两个函数就会返回。此时，用户进程调用recvfrom函数读取数据。</p>
-<p><img src="images/21.jpg" alt="image"></p>
+<p><img src="images/21.jpg" alt=""></p>
 <h2 id="3-Asynchronous（异步IO）"><a href="#3-Asynchronous（异步IO）" class="headerlink" title="3. Asynchronous（异步IO）"></a>3. Asynchronous（异步IO）</h2><p>异步IO实际上可以理解成为给内核设置回调函数，当内核数据准备好之后执行该回调函数，即用户线程的读取数据过程。异步IO会调用aio_read函数，该函数将描述符，缓冲区指针，缓冲区大小和文件指针传递给内核，传递给内核之后aio_read函数可以直接返回，用户线程可以执行其他任务。当内核数据就绪后，执行回调函数将数据复制到文件缓冲区指针处。</p>
-<p><img src="images/22.jpg" alt="image"></p>
+<p><img src="images/22.jpg" alt=""></p>
 <h1 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h1><p>之所有分成这么多种IO模型的原因是在网络编程中，数据并非随时都是就绪的，这个时候用户线程需要等待数据的就绪。等待时候采取的策略不同就衍生出来了这几种不同的IO模型，采用不同的IO模型将导致系统的运行效率和用户体验的不同，因此是一个非常基础也非常重要的内容。</p>
 
       
